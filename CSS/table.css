@@ -1,0 +1,109 @@
+/* General font size */
+body {
+    font-size: 19px;
+}
+/* Tabl positioning */
+table{
+    font-size: 16px;
+    width: 70%;
+    margin: 30px auto;
+    border-collapse: collapse;
+    text-align: left;
+}
+/* inner table colours */
+tr {
+    border-left: 3px solid #424242;
+    border-right: 3px solid #424242;
+    border-bottom: 3px solid #424242;
+    border-top: 3px solid #424242;
+    background: #ebf9ff;
+}
+/* outer table border */
+th, td{
+    border: #3B3B3B;
+    height: 30px;
+    padding: 2px;
+}
+/* hover colour */
+tr:hover {
+    background: #30d5c8;
+}
+
+/* general form colour, shape and position */
+form {
+    width: 45%;
+    margin: 30px auto;
+    text-align: left;
+    padding: 10px; 
+	border-radius: 25px;
+	background-color:#009191;
+	border: 3px solid #015c63; 
+}
+
+/* search bar positioning */
+form1 {
+    width: 45%;
+    margin: 30px auto;
+    text-align: left;
+    padding: 10px;  
+}
+
+/* general input group outer margin */
+.input-group {
+    margin: 10px 0px 10px 0px;
+}
+/* general input group text features */
+.input-group label {
+    display: block;
+    text-align: left;
+    margin: 3px;
+}
+
+/* general input group size and colour */
+.input-group input {
+    height: 30px;
+    width: 93%;
+    padding: 5px 10px;
+    font-size: 16px;
+    border-radius: 2px;
+    border: 3px solid #0CC;
+}
+
+/* general burron features */
+.btn {
+    padding: 10px;
+    font-size: 15px;
+    color: white;
+    background: #5F9EA0;
+    border: #000;
+    border-radius: 2px;
+	text-align: center;
+}
+/* edit button features */
+.edit_btn {
+    text-decoration: none;
+    padding: 2px 5px;
+    background: #2E8B57;
+    color: white;
+    border-radius: 2px;
+}
+/* delete button features */
+.del_btn {
+    text-decoration: none;
+    padding: 2px 5px;
+    color: white;
+    border-radius: 3px;
+    background: #800000;
+}
+/* message box design */
+.message {
+    margin: 30px auto; 
+    padding: 10px; 
+	font-size: 17px;
+    border-radius: 25px; 
+    color: #333; 
+    background: #0CC; 
+	border: 1px dotted #060;
+    width: 50%;
+    text-align: center;
+}

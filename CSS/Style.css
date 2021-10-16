@@ -1,0 +1,48 @@
+/*page background design*/
+body {background: radial-gradient(circle, #00bd91, #009c9c);}
+/*site text colours*/
+h1 {color: #000;}
+h2 {color: #000;}
+h3 {color: #000;}
+h4 {color: #222;font-size: 18px;}
+h5 {color: #222;}
+h6 {color: #222;}
+p1 {color: #222;font-size: 20px;}
+
+/*picture group containers*/
+.basic-container{display: inline-block; overflow:auto;}
+
+.picture{display: inline-block; overflow:auto; border: 8px ridge #063478;}
+
+/*textbox group containers*/
+.container1{display: inline-block; overflow:auto; border: 8px solid #007575;
+             padding: 20px; border-radius: 15px; background: #063478;color: #FFF;
+             border-style: double;}
+
+.container4{display: inline-block; overflow:auto; border: 8px solid #303745;
+             padding: 20px; border-radius: 15px; background: #217d05;color: #FFF;
+             border-style: double;}
+
+ .container5{overflow:auto; border: 
+             4px solid #300202; border-radius: 15px; background: 
+             #009e76;height: 26px;width: 150px;}
+
+.container6{display: inline-block; overflow:auto; border: 8px solid #300202;
+            padding: 20px; border-radius: 15px; background: #009e76;color: #FFF;
+            border-style: double;}
+
+.container2{ display: table-cell;display: inline-block; overflow:auto; border:
+             8px solid #303745; padding: 20px; border-radius: 15px; background: 
+             #9ee2ff; height: 275px; width: 270px; border-style: double;}
+
+.container3{ display: table-cell;display: inline-block; overflow:auto; border: 
+            8px solid #007575; padding: 20px; border-radius: 15px; background: 
+            #c0fafa;height: 275px;width: 250px; border-style: double;}
+
+.container7{display: inline-block; overflow:auto; border: 8px solid #203f83;
+            padding: 20px; border-radius: 15px; background: #0a203b;color: #FFF;
+            border-style: double;}
+			
+.captcha{display: inline-block; overflow:auto; padding: 20px; background: #47b6e6;color: #FFF}
+
+            

@@ -1,0 +1,8 @@
+/* sets footer at the bottom of the page in the center at full width*/
+.footer {
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   text-align: center;
+}
+
