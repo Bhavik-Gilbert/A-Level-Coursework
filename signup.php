@@ -89,10 +89,6 @@ if (isset($_POST['Submit'])) {
 ?>
 
 <html>
-<?php
-include 'Enitity/Header.php';
-#dictates the design of the page
-?>
 <head>
 <link rel="stylesheet" type = "text/css" href="CSS/Style.css">
 <link rel="stylesheet" type = "text/css" href="CSS/table.css">
@@ -179,9 +175,4 @@ else{
 ?>
 <br><br><br>
 </body>
-<head>
-<?php
-include 'Enitity/Footer.php';
-?>
-</head>
 </html>

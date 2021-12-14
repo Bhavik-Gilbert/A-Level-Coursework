@@ -1,10 +1,10 @@
 <DOCTYPE HTML>
 <html>
+   
 <?php
 session_start();
-#displays header at the top of the page
-include 'Enitity/Header.php';
 ?>
+
 <head>
 <link rel="stylesheet" type = "text/css" href="CSS/Style.css">
 <title>About Page</title>
@@ -51,10 +51,5 @@ include 'Enitity/menu.php';
 
 <br><br><br>
 </body>
-
-<?php
-#displays footer at the bottom of the page
-include 'Enitity/Footer.php';
-?>
 </html>
 

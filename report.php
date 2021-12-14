@@ -1,9 +1,6 @@
 <html>
 <?php
 
-#displays header at the page
-include 'Enitity/Header.php';
-
 session_start();
 #connects page to the database
 include 'Enitity/connect.php';
@@ -432,8 +429,6 @@ if (isset($_POST['view'])) { ?>
     <br><br><br>
 </body>
 <?php }
-#displays footer at the bottom of the page
-include 'Enitity/Footer.php';
 ?>
 </html>
 

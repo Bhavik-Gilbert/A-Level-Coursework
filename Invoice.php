@@ -4,8 +4,6 @@ session_start();
 ?>
 <html>
 <?php
-# displays header at the top of the page
-include 'Enitity/Header.php';
 
 #connects page to database
 include 'Enitity/connect.php';
@@ -69,10 +67,5 @@ unset($_SESSION["Price"]);
 ?>
  <br><br><br>
 </body>
-
-<?php
-#displays border at the bottom of the page
-include 'Enitity/Footer.php';
-?>
 </html>
 

@@ -59,10 +59,6 @@ Message:<br> <textarea name="Comment" rows="6" cols="80"></textarea>
 
 <br><br><br>
 </body>
-<?php
-#displays footer at the bottom of the page
-include 'Enitity/Footer.php';
-?>
 </html>
 
 

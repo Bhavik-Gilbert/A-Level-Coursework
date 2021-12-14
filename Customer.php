@@ -178,8 +178,6 @@
 
 <body>
 <?php
-#sets header at the top of the page
-include 'Enitity/header.php';
 #sets navbar at the top of the page
 include 'Enitity/menu.php';
 ?>
@@ -336,11 +334,4 @@ if (($_SESSION["Type"] === "Consumer") or $update == true){ ?>
 
 <br><br><br>
 </body>
-
-
-
-<?php
-#sets footer at the bottom of the page
-include 'Enitity/Footer.php';
-?>
 </html>

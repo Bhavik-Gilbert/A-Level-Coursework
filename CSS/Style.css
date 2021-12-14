@@ -1,5 +1,8 @@
 /*page background design*/
 body {background: radial-gradient(circle, #00bd91, #009c9c);}
+body::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+}
 /*site text colours*/
 h1 {color: #000;}
 h2 {color: #000;}

@@ -47,9 +47,6 @@ if (isset($_POST['Submit'])) {
 ?>
 
 <html>
-<?php
-include 'Enitity/Header.php';
-?>
 <head>
 <link rel="stylesheet" type = "text/css" href="CSS/Style.css">
 <link rel="stylesheet" type = "text/css" href="CSS/table.css">
@@ -117,8 +114,4 @@ if($_SESSION["Username"]) {
 
 <br><br><br>
 </body>
-
-<?php
-include 'Enitity/Footer.php';
-?>
 </html>

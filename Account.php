@@ -3,7 +3,6 @@ session_start();
 ?>
 <html>
 <?php
-include 'Enitity/Header.php';
 #directs users who are not logged in to the referal page
 if (!isset($_SESSION["Username"])) {
     header("Location:Refer.php");
@@ -43,7 +42,4 @@ You have already logged in.
 Click here to <a href="logout.php" tite="Logout">Logout
 <br><br>
 </body>
-<?php
-include 'Enitity/Footer.php';
-?>
 </html>

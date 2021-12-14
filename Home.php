@@ -4,8 +4,6 @@ session_start();
 ?>
 <html>
 <?php
-#adds the header to the top of the page
-include 'Enitity/Header.php';
 #links the stylesheet to determine the design of the page
 ?>
 <head>
@@ -124,9 +122,5 @@ and also a password-protected online gallery in which you and your guests can pu
 
 <br><br><br>
 </body>
-<?php
-#adds the footer to the bottom of the page
-include 'Enitity/Footer.php';
-?>
 </html>
 </DOCTYPE>

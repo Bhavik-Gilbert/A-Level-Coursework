@@ -124,11 +124,6 @@
 ?>
 
 <html>
-<?php
-#sets header at the top of the page
-include 'Enitity/Header.php';
-?>
-
 <head>
 <meta charset="utf-8">
 <title>Edit Bookings</title>
@@ -319,8 +314,6 @@ if ($update == true){
 
 <?php
 }
-#adds footer to bottom of page
-include 'Enitity/Footer.php';
 ?>
 </html>
 

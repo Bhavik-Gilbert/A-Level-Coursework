@@ -88,10 +88,6 @@ if (isset($_POST['Submit'])) {
 ?>
 
 <html>
-<?php
-include 'Enitity/Header.php';
-
-?>
 <head>
 <link rel="stylesheet" type = "text/css" href="CSS/Style.css">
 <link rel="stylesheet" type = "text/css" href="CSS/table.css">
@@ -159,7 +155,4 @@ if(!isset($_SESSION["Username"])) {
 </form>
 <br><br><br>
 </html>
-<?php
-include 'Enitity/Footer.php';
-?>
 </DOCTYPE>

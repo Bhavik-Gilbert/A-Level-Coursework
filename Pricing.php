@@ -3,11 +3,6 @@
 session_start();
 ?>
 <html>
-<?php
-#displays header at the top of the page
-include 'Enitity/Header.php';
-?>
-
 <head>
 <meta charset="utf-8">
 <title>Pricing</title>
@@ -86,10 +81,6 @@ include 'Enitity/menu.php';
 </div>
 <br><br><br>
 </body>
-<?php
-#displays footer at the bottom of the page
-include 'Enitity/Footer.php';
-?>
 </html>
 
 

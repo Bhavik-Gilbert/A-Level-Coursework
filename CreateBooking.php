@@ -80,10 +80,6 @@ else
 
 
 <html>
-<?php
-#adds header to the top of the page
-include 'Enitity/Header.php';
-?>
 <head>
 <link rel="stylesheet" type = "text/css" href="CSS/Style.css">
 <link rel="stylesheet" type = "text/css" href="CSS/table.css">
@@ -153,10 +149,5 @@ include 'Enitity/menu.php';
 </form>
 
 <br><br><br>
-<?php
-#adds footer to bottom of page
-include 'Enitity/Footer.php';
-?>
-
 </html>
 </DOCTYPE>

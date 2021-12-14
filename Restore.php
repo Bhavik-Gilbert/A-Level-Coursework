@@ -87,10 +87,6 @@ session_start();
 		header("Location:Account.php");}
 ?>
 <html>
-<?php
-#displays header at the top of the page
-include 'Enitity/Header.php';
-?>
 <head>
 <link rel="stylesheet" type = "text/css" href="CSS/Style.css">
 <link rel="stylesheet" type = "text/css" href="CSS/table.css">
@@ -248,9 +244,4 @@ else{
 
 <br><br><br>
 </body>
-
-<?php
-#displays footer at the bottom of the page
-include 'Enitity/Footer.php';
-?>
 </html>

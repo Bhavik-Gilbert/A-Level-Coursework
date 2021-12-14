@@ -1,8 +1,5 @@
 <html>
 <?php
-
-include 'Enitity/Header.php';
-
 session_start();
 include 'Enitity/connect.php';
 $message="";
@@ -153,9 +150,6 @@ if ($_SESSION["Type"] == "Photographer"){ ?>
 
 <br><br><br>
 </body>
-<?php
-include 'Enitity/Footer.php';
-?>
 </html>
 
 
