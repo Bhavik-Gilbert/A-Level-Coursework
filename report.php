@@ -109,6 +109,11 @@ if($_SESSION["Type"] == "Consumer")
 <link rel="stylesheet" type = "text/css" href="CSS/table.css">
 <link rel="stylesheet" type = "text/css" href="CSS/graph.css">
 </head>
+<?php #page specific style code ?>
+<style>
+    h3 {color: #FFF;}
+    h4{color: #FFF;}
+</style>
 
 <body>
 <?php
@@ -206,18 +211,18 @@ if($month1 == 1){$month2 = 12; $year2 = $year1 - 1;}
 else{$month2 = $month1 - 1; $year2 = $year1;}
 
 #selects records for current month and gets the sum of the price and number of entries
-$query1_1 = mysqli_query($con, "SELECT COUNT(PRICE) FROM Booking WHERE MONTH(DATE)='".date("m")."' and YEAR(DATE)='".date("Y")."'") or die(mysqli_error($con));
-$query1_2 = mysqli_query($con, "SELECT SUM(PRICE) FROM Booking WHERE MONTH(DATE)='".date("m")."' and YEAR(DATE)='".date("Y")."'") or die(mysqli_error($con));
+$query1_1 = mysqli_query($con, "SELECT COUNT(PRICE) FROM booking WHERE MONTH(DATE)='".date("m")."' and YEAR(DATE)='".date("Y")."'") or die(mysqli_error($con));
+$query1_2 = mysqli_query($con, "SELECT SUM(PRICE) FROM booking WHERE MONTH(DATE)='".date("m")."' and YEAR(DATE)='".date("Y")."'") or die(mysqli_error($con));
 $row1_1 = mysqli_fetch_array($query1_1);
 $row1_2 = mysqli_fetch_array($query1_2);
 #selects records for last month and gets the sum of the price and number of entries
-$query2_1 = mysqli_query($con, "SELECT COUNT(PRICE) FROM Booking WHERE MONTH(DATE)='".$month1."' and YEAR(DATE)='".$year1."'") or die(mysqli_error($con));
-$query2_2 = mysqli_query($con, "SELECT SUM(PRICE) FROM Booking WHERE MONTH(DATE)='".$month1."' and YEAR(DATE)='".$year1."'") or die(mysqli_error($con));
+$query2_1 = mysqli_query($con, "SELECT COUNT(PRICE) FROM booking WHERE MONTH(DATE)='".$month1."' and YEAR(DATE)='".$year1."'") or die(mysqli_error($con));
+$query2_2 = mysqli_query($con, "SELECT SUM(PRICE) FROM booking WHERE MONTH(DATE)='".$month1."' and YEAR(DATE)='".$year1."'") or die(mysqli_error($con));
 $row2_1 = mysqli_fetch_array($query2_1);
 $row2_2 = mysqli_fetch_array($query2_2);
 #selects records from 2 months ago and gets the sum of the price and number of entries
-$query3_1 = mysqli_query($con, "SELECT COUNT(PRICE) FROM Booking WHERE MONTH(DATE)='".$month2."' and YEAR(DATE)='".$year2."'") or die(mysqli_error($con));
-$query3_2 = mysqli_query($con, "SELECT SUM(PRICE) FROM Booking WHERE MONTH(DATE)='".$month2."' and YEAR(DATE)='".$year2."'") or die(mysqli_error($con));
+$query3_1 = mysqli_query($con, "SELECT COUNT(PRICE) FROM booking WHERE MONTH(DATE)='".$month2."' and YEAR(DATE)='".$year2."'") or die(mysqli_error($con));
+$query3_2 = mysqli_query($con, "SELECT SUM(PRICE) FROM booking WHERE MONTH(DATE)='".$month2."' and YEAR(DATE)='".$year2."'") or die(mysqli_error($con));
 $row3_1 = mysqli_fetch_array($query3_1);
 $row3_2 = mysqli_fetch_array($query3_2);
 
@@ -435,11 +440,5 @@ if (isset($_POST['view'])) { ?>
 <?php }
 ?>
 </html>
-
-<?php #page specific style code ?>
-<style>
-    h3 {color: #FFF;}
-    h4{color: #FFF;}
-</style>
 
 

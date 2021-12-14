@@ -12,7 +12,7 @@ $counting = 1;
 #a loop creating an array for the revenue for each month in the current year
 while ($counting < 13){
     #selects all bookings from the current month
-    $query = mysqli_query($con, "SELECT Price FROM Booking WHERE MONTH(DATE)='".$counting."' and YEAR(DATE)='".date("Y")."'") or die(mysqli_error($con));
+    $query = mysqli_query($con, "SELECT Price FROM booking WHERE MONTH(DATE)='".$counting."' and YEAR(DATE)='".date("Y")."'") or die(mysqli_error($con));
     while ($row = mysqli_fetch_array($query)) {
         #calculates revenue price for the month
         $rev[$counting]=$row["Price"]+$rev[$counting];}
