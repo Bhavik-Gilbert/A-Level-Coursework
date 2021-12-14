@@ -9,7 +9,7 @@ if (isset($_POST['Submit'])) {
         include 'Enitity/connect.php';
          
         #checks if username is in the login table
-        $result = mysqli_query($con, "SELECT * FROM Login WHERE Username='" . $_POST["Username"] ."'");
+        $result = mysqli_query($con, "SELECT * FROM login WHERE Username='" . $_POST["Username"] ."'");
         $row  = mysqli_fetch_array($result);
         
         #checks if the password at the record with username entered matches the hashed password in the table
@@ -23,15 +23,15 @@ if (isset($_POST['Submit'])) {
         }
 
         #logs user in and defines their session type and username for user access
-        if ($end == "true") {
+        if ($end) {
             $_SESSION["Type"] = $row['Type'];
             $_SESSION["Username"] = $row['Username'];
             if ($_SESSION['Type']=="Consumer") {
-                $result2 = mysqli_query($con, "SELECT * FROM Consumer WHERE LoginID='" . $row["LoginID"] ."'");
+                $result2 = mysqli_query($con, "SELECT * FROM consumer WHERE LoginID='" . $row["LoginID"] ."'");
                 $row2  = mysqli_fetch_array($result2);
                 $_SESSION["ID"] = $row2['ConsumerID'];
             } elseif ($_SESSION['Type']=="Photographer") {
-                $result2 = mysqli_query($con, "SELECT * FROM Photographer WHERE LoginID='" . $row["LoginID"] ."'");
+                $result2 = mysqli_query($con, "SELECT * FROM photographer WHERE LoginID='" . $row["LoginID"] ."'");
                 $row2  = mysqli_fetch_array($result2);
                 $_SESSION["ID"] = $row2['PhotographerID'];
             };
@@ -41,7 +41,7 @@ if (isset($_POST['Submit'])) {
             $message = "Invalid Username or Password";
         }
     } else {
-        $message = "Invalid captcha inputed";
+        $message = "Invalid captcha";
     }
 }
 ?>
@@ -105,7 +105,7 @@ if($_SESSION["Username"]) {
 #creates a hyperlink to the signup page
 ?>
 <div align="center">
-<a href="signup.php" tite="Signup">Signup
+<a href="signup.php" title="Signup">Signup
 </div>
 
 <?php

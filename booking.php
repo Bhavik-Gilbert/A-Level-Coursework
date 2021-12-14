@@ -9,13 +9,13 @@ if (isset($_GET['del'])) {
 		$id = $_GET['del'];
 		$state = "Cancelled";
 		#change booking status to cancelled in booking table
-		mysqli_query($con, "UPDATE Booking SET Status='$state' WHERE BookingID='".$id."'") or die (mysqli_error($con));
-		$message = "Booking Cancelled"; }
+		mysqli_query($con, "UPDATE booking SET Status='$state' WHERE BookingID='".$id."'") or die (mysqli_error($con));
+		$message = "Booking Cancelled"; 
+	}
 		
 		
 #redirect users that aren't logged in to the referal page
-if($_SESSION["Username"]){}
-else
+if(!isset($_SESSION["Username"]))
 { header("Location:Refer.php");}
 ?>
 
@@ -39,37 +39,40 @@ if ($_SESSION["Type"] === "Photographer") {
 	#select bookings from search for that photographer
     if (isset($_POST['_search'])) {
 		#get ShootTypeID from search in ShootType table
-		$select = mysqli_query($con, "SELECT * FROM ShootType WHERE Type LIKE '%".$_POST['search']."%'")
+		$select = mysqli_query($con, "SELECT * FROM shoottype WHERE Type LIKE '%".$_POST['search']."%'")
 		or die(mysqli_error($con));
 		$Shoot = mysqli_fetch_array($select);
 
 		#select bookings related to search
-        $query = mysqli_query($con, "SELECT * FROM Booking INNER JOIN Package ON Booking.PackageID = Package.PackageID WHERE Date LIKE'%".$_POST['search']."%' 
+        $query = mysqli_query($con, "SELECT * FROM booking INNER JOIN package ON booking.PackageID = package.PackageID WHERE Date LIKE'%".$_POST['search']."%' 
 		or ShootLocation LIKE'%".$_POST['search']."%' or StartTime LIKE'%".$_POST['search']."%' or Price LIKE'%".$_POST['search']."%' or 
 		Status LIKE'%".$_POST['search']."%' or ShootTypeID='".$Shoot['ShootTypeID']."' or Type LIKE '%".$_POST['search']."%' or 
-		Paid LIKE'%".$_POST['search']."%'")or die(mysqli_error($con));}
+		Paid LIKE'%".$_POST['search']."%'")or die(mysqli_error($con));
+	}
 	else {
 		#select all bookings for that photographer
-        $query = mysqli_query($con, "SELECT * FROM Booking WHERE PhotographerID='". $_SESSION["ID"]."'")
-   		or die(mysqli_error($con));}}
+        $query = mysqli_query($con, "SELECT * FROM booking WHERE PhotographerID='". $_SESSION["ID"]."'")
+   		or die(mysqli_error($con));
+	}
+}
    
 #select from bookings for that consumer
 if ($_SESSION["Type"] === "Consumer") {
 	#select bookings from search for that consumer
     if (isset($_POST['_search'])) {
 		#get ShootTypeID from search in ShootType table
-		$select = mysqli_query($con, "SELECT * FROM ShootType WHERE Type LIKE '%".$_POST['search']."%'")
+		$select = mysqli_query($con, "SELECT * FROM shoottype WHERE Type LIKE '%".$_POST['search']."%'")
 		or die(mysqli_error($con));
 		$Shoot = mysqli_fetch_array($select);
 
 		#select bookings related to search for that consumer
-		$query = mysqli_query($con, "SELECT * FROM Booking INNER JOIN Package ON Booking.PackageID = Package.PackageID WHERE ConsumerID='". $_SESSION["ID"]."' 
+		$query = mysqli_query($con, "SELECT * FROM booking INNER JOIN package ON booking.PackageID = package.PackageID WHERE ConsumerID='". $_SESSION["ID"]."' 
 		and (Date LIKE'%".$_POST['search']."%' or Address LIKE'%".$_POST['search']."%' or StartTime LIKE'%".$_POST['search']."%' or 
 		Price LIKE'%".$_POST['search']."%' or Status LIKE'%".$_POST['search']."%' or ShootTypeID='".$Shoot['ShootTypeID']."' or 
 		PackageID='".$_POST['search']."' or Paid LIKE'%".$_POST['search']."%')")or die(mysqli_error($con));
     } else {
 		#select all bookings for that consumer
-        $query = mysqli_query($con, "SELECT * FROM Booking WHERE ConsumerID='". $_SESSION["ID"]."'")
+        $query = mysqli_query($con, "SELECT * FROM booking WHERE ConsumerID='". $_SESSION["ID"]."'")
    or die(mysqli_error($con));
     }
 }
@@ -111,9 +114,9 @@ if ($_SESSION["Type"] === "Consumer") {
 	<?php 
 	#insert the records selected from the booking table into the displayed table
 	while ($row = mysqli_fetch_array($query)) {
-		$collect1 = mysqli_query($con, "SELECT * FROM ShootType WHERE ShootTypeID='".$row["ShootTypeID"]."'") or die(mysqli_error($con));
+		$collect1 = mysqli_query($con, "SELECT * FROM shoottype WHERE ShootTypeID='".$row["ShootTypeID"]."'") or die(mysqli_error($con));
 		$Shootings = mysqli_fetch_array($collect1);
-		$collect2 = mysqli_query($con, "SELECT * FROM Package WHERE PackageID='".$row['PackageID']."'") or die(mysqli_error($con));
+		$collect2 = mysqli_query($con, "SELECT * FROM package WHERE PackageID='".$row['PackageID']."'") or die(mysqli_error($con));
 		$Packagings = mysqli_fetch_array($collect2);
 		echo
 		   "<tr>

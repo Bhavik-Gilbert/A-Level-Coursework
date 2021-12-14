@@ -12,25 +12,27 @@ function report($switch, $month, $year)
     include 'Enitity/connect.php';
     #selects bookings from its selected entry and gets the sum and number of entries
     if ($switch == "yes") {
-        $query = mysqli_query($con, "SELECT COUNT(Price) FROM Booking WHERE MONTH(DATE)='".$month."' and YEAR(DATE)='".$year."'") or die(mysqli_error($con));
-        $query1 = mysqli_query($con, "SELECT SUM(Price) FROM Booking WHERE MONTH(DATE)='".$month."' and YEAR(DATE)='".$year."'") or die(mysqli_error($con));
+        $query = mysqli_query($con, "SELECT COUNT(Price) FROM booking WHERE MONTH(DATE)='".$month."' and YEAR(DATE)='".$year."'") or die(mysqli_error($con));
+        $query1 = mysqli_query($con, "SELECT SUM(Price) FROM booking WHERE MONTH(DATE)='".$month."' and YEAR(DATE)='".$year."'") or die(mysqli_error($con));
     } elseif ($switch == "no") {
-        $query = mysqli_query($con, "SELECT COUNT(Price) FROM Booking WHERE YEAR(DATE)='".$year."'") or die(mysqli_error($con));
-        $query1 = mysqli_query($con, "SELECT SUM(Price) FROM Booking WHERE YEAR(DATE)='".$year."'") or die(mysqli_error($con));
+        $query = mysqli_query($con, "SELECT COUNT(Price) FROM booking WHERE YEAR(DATE)='".$year."'") or die(mysqli_error($con));
+        $query1 = mysqli_query($con, "SELECT SUM(Price) FROM booking WHERE YEAR(DATE)='".$year."'") or die(mysqli_error($con));
     } elseif ($switch == "Package") {
-        $query = mysqli_query($con, "SELECT COUNT(Price) FROM Booking WHERE YEAR(DATE)='".$year."' and PackageID='".$month."'") or die(mysqli_error($con));
-        $query1 = mysqli_query($con, "SELECT SUM(Price) FROM Booking WHERE YEAR(DATE)='".$year."' and PackageID='".$month."'") or die(mysqli_error($con));}
+        $query = mysqli_query($con, "SELECT COUNT(Price) FROM booking WHERE YEAR(DATE)='".$year."' and PackageID='".$month."'") or die(mysqli_error($con));
+        $query1 = mysqli_query($con, "SELECT SUM(Price) FROM booking WHERE YEAR(DATE)='".$year."' and PackageID='".$month."'") or die(mysqli_error($con));
+    }
     elseif ($switch == "Shoot") {
-        $query = mysqli_query($con, "SELECT COUNT(Price) FROM Booking WHERE YEAR(DATE)='".$year."' and ShootTypeID='".$month."'") or die(mysqli_error($con));
-        $query1 = mysqli_query($con, "SELECT SUM(Price) FROM Booking WHERE YEAR(DATE)='".$year."' and ShootTypeID='".$month."'") or die(mysqli_error($con));}
+        $query = mysqli_query($con, "SELECT COUNT(Price) FROM booking WHERE YEAR(DATE)='".$year."' and ShootTypeID='".$month."'") or die(mysqli_error($con));
+        $query1 = mysqli_query($con, "SELECT SUM(Price) FROM booking WHERE YEAR(DATE)='".$year."' and ShootTypeID='".$month."'") or die(mysqli_error($con));
+    }
     elseif($switch=="All"){
-        $query = mysqli_query($con, "SELECT COUNT(Price) FROM Booking") or die(mysqli_error($con));
-        $query1 = mysqli_query($con, "SELECT SUM(Price) FROM Booking") or die(mysqli_error($con));}
+        $query = mysqli_query($con, "SELECT COUNT(Price) FROM booking") or die(mysqli_error($con));
+        $query1 = mysqli_query($con, "SELECT SUM(Price) FROM booking") or die(mysqli_error($con));
+    }
     #collects the SQL statements and ensures a 0 value
     $row = mysqli_fetch_array($query);
     $row1 = mysqli_fetch_array($query1);
-    if($row1[0] == 0){
-        $row1[0] = 0;}
+    if($row1[0] == 0){$row1[0] = 0;}
 #outputs the figures requested
 ?>
 The number of orders you've had are <?php echo$row[0]; ?>
@@ -91,8 +93,7 @@ report("Shoot",8,$year) ?>
 </div> <?php }
 
 #redirects users to referal page
-if($_SESSION["Username"]){}
-else
+if(!isset($_SESSION["Username"]))
 { header("Location:Refer.php");}
 
 #redirect users that are consumers to the account page
@@ -136,7 +137,7 @@ include 'Enitity/menu.php';
 	
 	<?php 
     #selects all records in the Booking Table and connects it to the ShootType Table
-    $query = mysqli_query($con, "SELECT * FROM Booking INNER JOIN ShootType ON Booking.ShootTypeID = ShootType.ShootTypeID") or die(mysqli_error($con));
+    $query = mysqli_query($con, "SELECT * FROM booking INNER JOIN shoottype ON booking.ShootTypeID = shoottype.ShootTypeID") or die(mysqli_error($con));
     #displays records in table
 	while ($row = mysqli_fetch_array($query)) {
         #gets Package name at the corresponding PackageID in the Package Table
@@ -223,8 +224,7 @@ $row3_2 = mysqli_fetch_array($query3_2);
 #calculates totals
 $n = $row1_1[0] + $row2_1[0] + $row3_1[0];
 $r = $row1_2[0] + $row2_2[0]  +$row3_2[0];
-if($r == 0){
-    $r=0;}
+if($r == 0){$r=0;}
 
 #displays the requested figures
 ?>
@@ -325,7 +325,7 @@ reportP(date("Y")-1) ?>
 
 <?php #creates a form to select time periods ?>
 <div align="center">
-<h2>Custom Comapare</h2>
+<h2>Custom Compare</h2>
 </div>
 <form name="frmsign" method="post" action="" align="center">
 <div class="input-group">
@@ -410,9 +410,11 @@ if (isset($_POST['view'])) { ?>
         <h4>Date 1</h4><?php
         #checks if a month is entered
         if ($_POST['Month1'] != "") {
-            report("yes", $_POST['Month1'], $_POST['Year1'],"");
-    }   elseif ($_POST['Year1'] != "") {
-            report("no", $_POST['Month1'], $_POST['Year1'],""); } ?> </div> <?php
+            report("yes", $_POST['Month1'], $_POST['Year1']);
+        }   
+        elseif($_POST['Year1'] != "") {
+            report("no", $_POST['Month1'], $_POST['Year1']); 
+        } ?> </div> <?php
     }
     #checks if a year is entered, only outputs if a year is entered
     if ($_POST['Year2'] != "") { ?>
@@ -420,11 +422,13 @@ if (isset($_POST['view'])) { ?>
         <h4>Date 2</h4> <?php
         #checks if a month is entered
         if ($_POST['Month2'] != "") {
-            report("yes", $_POST['Month2'], $_POST['Year2'],"");
+            report("yes", $_POST['Month2'], $_POST['Year2']);
         } else{
-            report("no", $_POST['Month2'], $_POST['Year2'],"");
+            report("no", $_POST['Month2'], $_POST['Year2']);
         }
-        ?> </div> <?php  }?>
+        ?> 
+        </div> 
+        <?php  }?>
     </div>
     <br><br><br>
 </body>
@@ -432,7 +436,7 @@ if (isset($_POST['view'])) { ?>
 ?>
 </html>
 
-<?php #page specific stlye code ?>
+<?php #page specific style code ?>
 <style>
     h3 {color: #FFF;}
     h4{color: #FFF;}

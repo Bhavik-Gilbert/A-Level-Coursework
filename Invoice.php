@@ -9,13 +9,13 @@ session_start();
 include 'Enitity/connect.php';
 # gets the name of the ShootType for the corresponding ShootTypeID in the ShootType Table
 if (isset($_SESSION["Date"])){
-$collect1 = mysqli_query($con, "SELECT * FROM ShootType WHERE ShootTypeID='".$_SESSION["ShootID"]."'") or die(mysqli_error($con));
+$collect1 = mysqli_query($con, "SELECT * FROM shoottype WHERE ShootTypeID='".$_SESSION["ShootID"]."'") or die(mysqli_error($con));
 $Shootings = mysqli_fetch_array($collect1);
 # gets the name of the Package for the corresponding PackageID in the Package Table
-$collect2 = mysqli_query($con, "SELECT * FROM Package WHERE PackageID='".$_SESSION['PackageID']."'") or die(mysqli_error($con));
+$collect2 = mysqli_query($con, "SELECT * FROM package WHERE PackageID='".$_SESSION['PackageID']."'") or die(mysqli_error($con));
 $Packagings = mysqli_fetch_array($collect2);
 #Collects the BookingID from the Booking table for this booking
-$collect3 = mysqli_query($con, "SELECT * FROM Booking WHERE Date='".$_SESSION['Date']."' and ShootLocation='".$_SESSION['Address']."' and StartTime='".$_SESSION['StartTime']."'") or die(mysqli_error($con));}
+$collect3 = mysqli_query($con, "SELECT * FROM booking WHERE Date='".$_SESSION['Date']."' and ShootLocation='".$_SESSION['Address']."' and StartTime='".$_SESSION['StartTime']."'") or die(mysqli_error($con));}
 $Bookings = mysqli_fetch_array($collect3);
 ?>
 <head>

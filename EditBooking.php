@@ -21,18 +21,18 @@
 		#assigns id to be used on update
 		$_SESSION['edit'] = $id;
 		#collects record from the BookingID at id
-		$record = mysqli_query($con, "SELECT * FROM Booking WHERE BookingID='" . $id ."'");
+		$record = mysqli_query($con, "SELECT * FROM booking WHERE BookingID='" . $id ."'");
 		$n = mysqli_fetch_array($record);
 
 		#collects shoottype name at record from collected ShootTypeID in ShootType table
 		$ShootType = $n["ShootTypeID"];
-		$Shooting = mysqli_query($con, "SELECT * FROM ShootType WHERE ShootTypeID='" . $ShootType ."'");
+		$Shooting = mysqli_query($con, "SELECT * FROM shoottype WHERE ShootTypeID='" . $ShootType ."'");
 		$n1 = mysqli_fetch_array($Shooting);
 		$ShootID = $n1["Type"];
 		
 		#collects package name at record from collected PackageID in Package table
 		$PackageType = $n["PackageID"];
-		$Packaging = mysqli_query($con, "SELECT * FROM Package WHERE PackageID='" . $PackageType ."'");
+		$Packaging = mysqli_query($con, "SELECT * FROM package WHERE PackageID='" . $PackageType ."'");
 		$n2 = mysqli_fetch_array($Packaging);
 		$Package = $n2["Type"];
 		
@@ -44,7 +44,8 @@
 		$Price = $n['Price'];
 		$Status = $n['Status'];
 		$Paid = $n['Paid'];
-		$update = true;}		
+		$update = true;
+	}		
 			
 	#checks if the update is selected
 	if (isset($_POST['update'])) {
@@ -62,13 +63,15 @@
 		$Paid = $_POST['Paid'];
 		
 		#validates inputted values
-		if (($ShootType == "") or ($Date == "") or ($Address == "" ) or ($StartTime == "") or ($Length == "") or ($Price == "" ) or ($Status == "") or ($PackageType == "")){
-		$message = "Please fill in all of the fields";}
+		if ((empty($ShootType)) || (empty($Date)) || (empty($Address)) || (empty($StartTime)) || (empty($Length)) || (empty($Price)) || (empty($Status)) || (empty($PackageType))){
+		$message = "Please fill in all of the fields";
+	}
 		else if (!is_numeric($Length))
-		{$message = "Invalid Value for Shoot Length Field";}
+		{$message = "Invalid Value for Shoot Length Field";
+		}
 		else{
 		#updates record in booking table at the edit id/BookingID selected
-		mysqli_query($con, "UPDATE Booking SET ShootTypeID='$ShootType', PackageID='$PackageType', Date='$Date', ShootLocation='$Address', StartTime='$StartTime', Length='$Length', 
+		mysqli_query($con, "UPDATE booking SET ShootTypeID='$ShootType', PackageID='$PackageType', Date='$Date', ShootLocation='$Address', StartTime='$StartTime', Length='$Length', 
 		Price='$Price',Status='$Status',Paid='$Paid' WHERE BookingID='".$id."'") or die (mysqli_error($con));
 		$message = "Data updated";
 		#clears variables
@@ -81,14 +84,16 @@
 		$Price = "";
 		$Paid = "";
 		$_SESSION['edit'] = "";
-		$update = false;}}
+		$update = false;
+	}
+}
 	
 	#checks if the del class button is selected
 	if (isset($_GET['del'])) {
 		#assigns id from the del id
 		$id = $_GET['del'];
 		#collects record at the corresponding BookingID
-		$record = mysqli_query($con, "SELECT * FROM Booking WHERE BookingID='" . $id ."'");
+		$record = mysqli_query($con, "SELECT * FROM booking WHERE BookingID='" . $id ."'");
 		$n = mysqli_fetch_array($record);
 		#assigns data from collected record
 		$Booking = $n["BookingID"];
@@ -105,16 +110,15 @@
 		$Paid = $n['Paid'];
 		
 		#backups record by inserting record into DeletedBooking Table
-		mysqli_query($con, "INSERT INTO DeletedBooking (BookingID, ConsumerID, PhotographerID , ShootTypeID , PackageID , Date , ShootLocation , StartTime, Length , Price , Status, Paid) 
+		mysqli_query($con, "INSERT INTO deletedbooking (BookingID, ConsumerID, PhotographerID , ShootTypeID , PackageID , Date , ShootLocation , StartTime, Length , Price , Status, Paid) 
 		VALUES ('$Booking','$Consumer','$Photographer','$ShootType','$PackageType','$Date','$Address','$StartTime','$Length','$Price','$Status', '$Paid')") or die (mysqli_error($con));
 		
 		#deletes record in the Booking Table at the corresponding BookingID
-		mysqli_query($con, "DELETE FROM Booking WHERE BookingID='" . $id ."'") or (mysqli_error($con));
+		mysqli_query($con, "DELETE FROM booking WHERE BookingID='" . $id ."'") or (mysqli_error($con));
 		$message = "Data deleted"; }
 
 	#redirect users that aren't logged in to the referal page
-	if($_SESSION["Username"]){}
-	else
+	if(!isset($_SESSION["Username"]))
 		{header("Location:Refer.php");}
 
 	#redirect users that are consumers to the account page
@@ -142,18 +146,20 @@ include 'Enitity/menu.php';
 #checks if search is selected
  if (isset($_POST['_search'])) {
 	#get PackageIDin the Package table
-    $select = mysqli_query($con, "SELECT * FROM Package WHERE Type LIKE '%".$_POST['search']."%'")
+    $select = mysqli_query($con, "SELECT * FROM package WHERE Type LIKE '%".$_POST['search']."%'")
     or die(mysqli_error($con));
 	$Package = mysqli_fetch_array($select);
 	#collects all bookings relating to search
-    $query = mysqli_query($con, "SELECT * FROM Booking INNER JOIN ShootType ON Booking.ShootTypeID = ShootType.ShootTypeID WHERE Date LIKE'%".$_POST['search']."%' or 
+    $query = mysqli_query($con, "SELECT * FROM booking INNER JOIN shoottype ON booking.ShootTypeID = shoottype.ShootTypeID WHERE Date LIKE'%".$_POST['search']."%' or 
 	ShootLocation LIKE'%".$_POST['search']."%' or StartTime LIKE'%".$_POST['search']."%' or Price LIKE'%".$_POST['search']."%' 
 	or Status LIKE'%".$_POST['search']."%' or Type LIKE'%".$_POST['search']."%' or PackageID='".$Package['PackageID']."' or Paid LIKE'%".$_POST['search']."%'")
-    or die(mysqli_error($con));}
+    or die(mysqli_error($con));
+}
 else{
 	#collects all bookings
 	$query = mysqli_query($con, "SELECT * FROM Booking")
-   or die (mysqli_error($con));}
+   or die (mysqli_error($con));
+}
 #creates a search bar
 ?>
 
@@ -191,10 +197,10 @@ else{
 	#insert the records selected from the booking table into the displayed table
 	while ($row = mysqli_fetch_array($query)) {
 		#collects name for the corresponding ShootTypeID in the row array from the ShootType Table
-		$collect1 = mysqli_query($con, "SELECT * FROM ShootType WHERE ShootTypeID='".$row["ShootTypeID"]."'") or die(mysqli_error($con));
+		$collect1 = mysqli_query($con, "SELECT * FROM shoottype WHERE ShootTypeID='".$row["ShootTypeID"]."'") or die(mysqli_error($con));
 		$Shootings = mysqli_fetch_array($collect1);
 		#collects name for the corresponding PackageID in the row array from the Package Table
-		$collect2 = mysqli_query($con, "SELECT * FROM Package WHERE PackageID='".$row['PackageID']."'") or die(mysqli_error($con));
+		$collect2 = mysqli_query($con, "SELECT * FROM package WHERE PackageID='".$row['PackageID']."'") or die(mysqli_error($con));
 		$Packagings = mysqli_fetch_array($collect2);
 		#output data in row array
 		echo
@@ -224,7 +230,7 @@ else{
 
 <?php
 #shows form only if edit is selected
-if ($update == true){
+if ($update){
 	#creates the form
 ?>
 	<form method="post" action="EditBooking.php" align="center">

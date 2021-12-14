@@ -1,13 +1,15 @@
 <?php 
 #checks if something has been submitted
-if(count($_POST)>0) {
+if(isset($_POST)) {
     //initialising variable
     $message = "";
     #validates form
-    if (($_POST['Email'] == "") or ($_POST['Comment'] == "")){
-		$message = "Please fill in all of the fields";}
+    if ((empty($_POST['Email'])) || (empty($_POST['Comment']))){
+		$message = "Please fill in all of the fields";
+    }
     else if (!filter_var($_POST['Email'], FILTER_VALIDATE_EMAIL)){
-        $message = "Invalid Value for Email Field";}
+        $message = "Invalid Value for Email Field";
+    }
     else{
         #assigns collected data from the form
         $Email = $_POST['Email'];
@@ -15,18 +17,18 @@ if(count($_POST)>0) {
         #uses mail function to send email
         $send = (mail("bhaviklob@gmail.com",$Email,$Comment));
         #checks if email was sent
-        if ($send == true){
-            $message = "Message sent successfully, we'll get back to you at our earliest convenience";}
-         else if ($send == false){$message = "Message could not be sent, try again later";}
- }}
+        if ($send){
+            $message = "Message sent successfully, we'll get back to you at our earliest convenience";
+        }
+         else {
+             $message = "Message could not be sent, try again later";
+        }
+    }
+}
 ?> <DOCTYPE html>
 <html>
 <?php
 session_start();
-?>
-<?php
-#displays header at the top of the page
-include 'Enitity/Header.php';
 ?>
 
 <head>

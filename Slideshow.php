@@ -300,5 +300,6 @@ function show(next, number) {
 
 
 <head>
-<link rel="stylesheet" type = "text/css" href="CSS/slideshow.css">
+  <title>Slideshow</title>
+  <link rel="stylesheet" type = "text/css" href="CSS/slideshow.css">
 </head>

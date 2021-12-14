@@ -1,7 +1,7 @@
 <DOCTYPE HTML>
 <?php
 session_start();
-	#connects page to the databse
+	#connects page to the database
 	include 'Enitity/connect.php';
 	
 	
@@ -10,9 +10,9 @@ session_start();
 		#assign id from res1 id for BookingID
 		$id = $_GET['res1'];
 		#selects record from DeletedBooking corresponding to the res1 id
-		$record = mysqli_query($con, "SELECT * FROM DeletedBooking WHERE BookingID='" . $id ."'");
+		$record = mysqli_query($con, "SELECT * FROM deletedbooking WHERE BookingID='" . $id ."'");
 		$n = mysqli_fetch_array($record);
-		#asigns data from selected record
+		#assigns data from selected record
 		$Booking = $n["BookingID"];
 		$Consumer = $n["ConsumerID"];
 		$Photographer = $n["PhotographerID"];
@@ -27,11 +27,11 @@ session_start();
 		$Paid = $n['Paid'];
 		
 		#inserts record data into the Booking Table
-		$sql = mysqli_query($con, "INSERT INTO Booking (BookingID, ConsumerID, PhotographerID , ShootTypeID , PackageID , Date , ShootLocation , StartTime, Length , Price , Status, Paid) 
+		$sql = mysqli_query($con, "INSERT INTO booking (BookingID, ConsumerID, PhotographerID , ShootTypeID , PackageID , Date , ShootLocation , StartTime, Length , Price , Status, Paid) 
 		VALUES ('$Booking','$Consumer','$Photographer','$ShootType','$PackageType','$Date','$Address','$StartTime','$Length','$Price','$Status','$Paid')") or die (mysqli_error($con));
 		
 		#deletes the booking at res1 id from the DeletedBooking table
-		mysqli_query($con, "DELETE FROM DeletedBooking WHERE BookingID='" . $id ."'") or (mysqli_error($con));
+		mysqli_query($con, "DELETE FROM deletedbooking WHERE BookingID='" . $id ."'") or (mysqli_error($con));
 		$message = "Booking Restored"; }
 		
 	#checks if delete booking is selected
@@ -39,7 +39,7 @@ session_start();
 		#assigns id from del1 id for BookingID
 		$id = $_GET['del1'];
 		#deletes the booking at del1 id from the DeletedBooking table
-		mysqli_query($con, "DELETE FROM DeletedBooking WHERE BookingID='" . $id ."'") or (mysqli_error($con));
+		mysqli_query($con, "DELETE FROM deletedbooking WHERE BookingID='" . $id ."'") or (mysqli_error($con));
 		$message = "Booking Deleted"; }
 		
 	#checks if restore account is selected
@@ -48,7 +48,7 @@ session_start();
 		$id = $_GET['res2'];
 		
 		#collects record from DeletedConsumer at the corresponding res2 id
-		$transfer = mysqli_query($con, "SELECT * FROM DeletedConsumer WHERE ConsumerID='" . $id ."'") or (mysqli_error($con));
+		$transfer = mysqli_query($con, "SELECT * FROM deletedconsumer WHERE ConsumerID='" . $id ."'") or (mysqli_error($con));
 		$d = mysqli_fetch_array($transfer);
 		#assigns data from record
 		$Firstname = $d["Firstname"];
@@ -61,13 +61,13 @@ session_start();
 		$Password = $d["Password"];
 		
 		#inserts record data in Consumer Table
-		mysqli_query($con, "INSERT INTO Consumer(ConsumerID, Firstname, Surname , Email , PhoneNumber, LoginID,Address) 
+		mysqli_query($con, "INSERT INTO consumer(ConsumerID, Firstname, Surname , Email , PhoneNumber, LoginID,Address) 
 		VALUES ('$id' , '$Firstname', '$Surname' , '$Email' , '$PhoneNumber' , '$LoginID', '$Address2')") or die (mysqli_error($con));
 		#inserts record data in Login Table
-		mysqli_query($con, "INSERT INTO Login(LoginID, Username, Password, Type) 
+		mysqli_query($con, "INSERT INTO login(LoginID, Username, Password, Type) 
 		VALUES ('$LoginID', '$Username', '$Password', 'Consumer')") or die (mysqli_error($con));
-		#deletes the accoutn at res2 id from the DeletedConsumer table
-		mysqli_query($con, "DELETE FROM DeletedConsumer WHERE ConsumerID='" . $id ."'") or (mysqli_error($con));
+		#deletes the account at res2 id from the DeletedConsumer table
+		mysqli_query($con, "DELETE FROM deletedconsumer WHERE ConsumerID='" . $id ."'") or (mysqli_error($con));
 		$message = "Account Restored"; }
 		
 	#checks if delete account is selected 
@@ -79,12 +79,12 @@ session_start();
 		$message = "Account Deleted"; }
 
 	#redirect users that aren't logged in to the referal page
-	if($_SESSION["Username"]){}
-	else
+	if(!isset($_SESSION["Username"]))
 		{header("Location:Refer.php");}
 	#redirects consumers to the account page
 	if($_SESSION["Type"]=="Consumer") {
-		header("Location:Account.php");}
+		header("Location:Account.php");
+	}
 ?>
 <html>
 <head>
@@ -106,18 +106,20 @@ include 'Enitity/menu.php';
 #checks if search DeletedBooking is selected
  if (isset($_POST['_search1'])) {
 	#get PackageID in the Package table
-    $select2 = mysqli_query($con, "SELECT * FROM Package WHERE Type='%".$_POST['search']."%'")
+    $select2 = mysqli_query($con, "SELECT * FROM package WHERE Type='%".$_POST['search']."%'")
     or die(mysqli_error($con));
 	$Package = mysqli_fetch_array($select2);
 	#collects all bookings relating to search
-    $query = mysqli_query($con, "SELECT * FROM DeletedBooking INNER JOIN ShootType ON DeletedBooking.ShootTypeID = ShootType.ShootTypeID WHERE Date LIKE'%".$_POST['search']."%' or 
+    $query = mysqli_query($con, "SELECT * FROM deletedbooking INNER JOIN shoottype ON deletedbooking.ShootTypeID = shoottype.ShootTypeID WHERE Date LIKE'%".$_POST['search']."%' or 
 	ShootLocation LIKE'%".$_POST['search']."%' or StartTime LIKE'%".$_POST['search']."%' or Price LIKE'%".$_POST['search']."%' 
 	or Status LIKE'%".$_POST['search']."%' or Type LIKE'%".$_POST['search']."%' or PackageID='".$Package['PackageID']."' or Paid LIKE'%".$_POST['search']."%'")
-    or die(mysqli_error($con));}
+    or die(mysqli_error($con));
+}
 else{
 	#collects all bookings
-	$query = mysqli_query($con, "SELECT * FROM DeletedBooking")
-   or die (mysqli_error($con));}
+	$query = mysqli_query($con, "SELECT * FROM deletedbooking")
+   or die (mysqli_error($con));
+}
 #creates a search bar
 ?>
 
@@ -180,14 +182,16 @@ else{
 #checks if search DeleteConsumer is selected
 if (isset($_POST['_search2'])) {
 	#collects all consumers relating to search
-	$query = mysqli_query($con, "SELECT * FROM DeletedConsumer WHERE (ConsumerID='".$_POST['search']."' or 
+	$query = mysqli_query($con, "SELECT * FROM deletedconsumer WHERE (ConsumerID='".$_POST['search']."' or 
 	Firstname LIKE'%".$_POST['search']."%' or Surname LIKE'%".$_POST['search']."%' or PhoneNumber LIKE'%".$_POST['search']."%' 
 	or Address LIKE'%".$_POST['search']."%' or Email LIKE'%".$_POST['search']."%' or LoginID ='".$_POST['LoginID']."')")
-	or die(mysqli_error($con));}
+	or die(mysqli_error($con));
+}
 else{
 	#collects all consumers
-    $query = mysqli_query($con, "SELECT * FROM DeletedConsumer")
-   or die(mysqli_error($con));}?>
+    $query = mysqli_query($con, "SELECT * FROM deletedconsumer")
+   or die(mysqli_error($con));
+   }?>
 
 <form action="" method="post" align="center" style="background-color:transparent;
 	border: solid transparent";>

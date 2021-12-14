@@ -3,7 +3,7 @@
 	#connect to database
 	include 'Enitity/connect.php';
 	# initialize variables
-	$record = mysqli_query($con, "SELECT * FROM Consumer WHERE ConsumerID='$_SESSION[ID]'");
+	$record = mysqli_query($con, "SELECT * FROM consumer WHERE ConsumerID='$_SESSION[ID]'");
 	$n = mysqli_fetch_array($record);
 	$Firstname = $n['Firstname'];
 	$Surname = $n['Surname'];
@@ -11,7 +11,7 @@
 	$PhoneNumber = $n['PhoneNumber'];
 	$Address = $n['Address'];
 	$update = false;
-	$record2 = mysqli_query($con, "SELECT * FROM Login WHERE LoginID='".$n['LoginID']."'");
+	$record2 = mysqli_query($con, "SELECT * FROM login WHERE LoginID='".$n['LoginID']."'");
 	$n2 = mysqli_fetch_array($record2);
 	$Password =$n2['Password'];
 
@@ -25,7 +25,7 @@
 		#assigns id to be used on update
 		$update = true;
 		#collects record from the Consumer Table at id
-		$record = mysqli_query($con, "SELECT * FROM Consumer WHERE ConsumerID='".$id."'");
+		$record = mysqli_query($con, "SELECT * FROM consumer WHERE ConsumerID='".$id."'");
 		$n = mysqli_fetch_array($record);
 		#assigns data from record
 		$Firstname = $n['Firstname'];
@@ -35,10 +35,11 @@
 		$Address = $n['Address'];
 
 		#collects record from the Login Table at collected LoginID
-		$record2 = mysqli_query($con, "SELECT * FROM Login WHERE LoginID='".$n['LoginID']."'");
+		$record2 = mysqli_query($con, "SELECT * FROM login WHERE LoginID='".$n['LoginID']."'");
 		$n2 = mysqli_fetch_array($record2);
 		#assigns password from record
-		$Password =$n2['Password'];}
+		$Password =$n2['Password'];
+	}
 			
 	#checks if the update is selected
 	if (isset($_POST['update'])) {
@@ -69,71 +70,95 @@
 
 		#gets ConsumerID of chosen consumer
 		if ($_SESSION["Type"]=="Consumer"){
-			$id = $_SESSION["ID"];}
+			$id = $_SESSION["ID"];
+		}
 		else if ($_SESSION["Type"]=="Photographer"){
-			$id = $_SESSION["edit"];}
+			$id = $_SESSION["edit"];
+		}
 		#collects data from the consumer table at the id to get the LoginID
-		$result = mysqli_query($con,"SELECT * FROM Consumer WHERE ConsumerID='" . $id ."'");
+		$result = mysqli_query($con,"SELECT * FROM consumer WHERE ConsumerID='" . $id ."'");
 		$row  = mysqli_fetch_array($result);
 		#collects data from the login table at the collected LoginID
-		$result2 = mysqli_query($con, "SELECT * FROM Login WHERE LoginID='".$row['LoginID']."'");
+		$result2 = mysqli_query($con, "SELECT * FROM login WHERE LoginID='".$row['LoginID']."'");
 		$row2 = mysqli_fetch_array($result2);
 	
 		#Hashes password using the password collected from the Login Table
 		$Hash = crypt($OPassword, $row2["Password"]);
 		#Checks if the hashes match
 		if ($Hash == $row2["Password"]){
-			$end = "true";}
+			$end = "true";
+		}
 		else {
-			$end = "false";}
+			$end = "false";
+		}
 		
 		#validates form inputs
 		if ($_SESSION["Type"] == "Consumer"){
-			if (($Firstname == "") or ($Surname == "") or ($Email == "" and $PhoneNumber =="") or ($Address == "") or ($OPassword == "")){
-				$message = "Please fill in all of the fields";}
+			if ((empty($Firstname)) || (empty($Surname)) || (empty($Email) && empty($PhoneNumber)) || (empty($Address)) || (empty($OPassword))){
+				$message = "Please fill in all of the fields";
+			}
 			else if (is_numeric($Firstname)){
-				$message = "Invalid Value for Firstname Field";}
+				$message = "Invalid Value for Firstname Field";
+			}
 			else if (is_numeric($Surname)){
-				$message = "Invalid Value for Surname Field";}
+				$message = "Invalid Value for Surname Field";
+			}
 			else if (!filter_var($Email, FILTER_VALIDATE_EMAIL)){
-				$message = "Invalid Value for Email Field";}
-			else if ((!is_numeric($PhoneNumber)) or (strlen($_POST['PhoneNumber'])<11)){
-				$message = "Invlaid Value for PhoneNumber Field. It should be a UK number in 07 or 02 form.";}
+				$message = "Invalid Value for Email Field";
+			}
+			else if ((!is_numeric($PhoneNumber)) || (strlen($_POST['PhoneNumber'])<11)){
+				$message = "Invalid Value for PhoneNumber Field. It should be a UK number in 07 or 02 form.";
+			}
+
 			else if  ($end == "false") {
-				$message = "The old password is incorrect";}
+				$message = "The old password is incorrect";
+			}
 		else{
 			#validates new password if entered
 			if($Password <>""){
 				if (strlen($_POST['Password'])<8){
-					$message = "Password is too short, it must be atleast 8 characters long";}
+					$message = "Password is too short, it must be at least 8 characters long";
+				}
 				else if(!$uppercase || !$lowercase || !$number || !$specialChars){
-					$message = "Password must include 1 upper case, 1 lower case, 1 number and 1 special character";}
+					$message = "Password must include 1 upper case, 1 lower case, 1 number and 1 special character";
+				}
 				else {
 					#updates password in login table at the corresponding LoginID
-              		mysqli_query($con, "UPDATE Login SET Password='$Hash1'  WHERE LoginID='" . $row['LoginID'] ."'") or die(mysqli_error($con));
-			}}
+              		mysqli_query($con, "UPDATE login SET Password='$Hash1'  WHERE LoginID='" . $row['LoginID'] ."'") or die(mysqli_error($con));
+			}
+		}
 				#updates the record in the Consumer Table at the corresponding ConsumerID
-				mysqli_query($con, "UPDATE Consumer SET Firstname='$Firstname', Surname='$Surname', Email='$Email', PhoneNumber='$PhoneNumber', Address='$Address' 
+				mysqli_query($con, "UPDATE consumer SET Firstname='$Firstname', Surname='$Surname', Email='$Email', PhoneNumber='$PhoneNumber', Address='$Address' 
 				WHERE ConsumerID='" . $id ."'") or die (mysqli_error($con));
-				$message = "Details Successfully Updated";}}
+				$message = "Details Successfully Updated";
+			}
+		}
 		
 			#validates form inputs
 		if ($_SESSION["Type"] == "Photographer"){
-			if (($Firstname == "") or ($Surname == "") or ($Email == "" and $PhoneNumber =="") or ($Address == "")){
-				$message = "Please fill in all of the fields";}
+			if ((empty($Firstname)) || (empty($Surname)) || (empty($Email) && empty($PhoneNumber)) || (empty($Address))){
+				$message = "Please fill in all of the fields";
+			}
 			else if (is_numeric($Firstname)){
-				$message = "Invalid Value for Firstname Field";}
+				$message = "Invalid Value for Firstname Field";
+			}
 			else if (is_numeric($Surname)){
-				$message = "Invalid Value for Surname Field";}
+				$message = "Invalid Value for Surname Field";
+			}
 			else if (!filter_var($Email, FILTER_VALIDATE_EMAIL)){
-				$message = "Invalid Value for Email Field";}
-			else if ((!is_numeric($PhoneNumber)) or (strlen($_POST['PhoneNumber']<11))){
-				$message = "Invlaid Value for PhoneNumber Field. It should be a UK number in 07 or 02 form.";}
+				$message = "Invalid Value for Email Field";
+			}
+			else if ((!is_numeric($PhoneNumber)) || (strlen($_POST['PhoneNumber']<11))){
+				$message = "Invlaid Value for PhoneNumber Field. It should be a UK number in 07 or 02 form.";
+			}
 			else{
 				#updates the record in the Consumer Table at the corresponding ConsumerID
-				mysqli_query($con, "UPDATE Consumer SET Firstname='$Firstname', Surname='$Surname', Email='$Email', PhoneNumber='$PhoneNumber', Address='$Address' 
+				mysqli_query($con, "UPDATE consumer SET Firstname='$Firstname', Surname='$Surname', Email='$Email', PhoneNumber='$PhoneNumber', Address='$Address' 
 				WHERE ConsumerID='" . $id ."'") or die (mysqli_error($con));
-				$message = "Details Successfully Updated";}}}
+				$message = "Details Successfully Updated";
+			}
+		}
+	}
 	
 		#checks if the del class button is selected
 	if (isset($_GET['del'])) {
@@ -141,11 +166,11 @@
         $id = $_GET['del'];
         
 		#collects record in the Consumer Table at the corresponding ConsumerID
-        $transfer = mysqli_query($con, "SELECT * FROM Consumer WHERE ConsumerID='" . $id ."'") or (mysqli_error($con));
+        $transfer = mysqli_query($con, "SELECT * FROM consumer WHERE ConsumerID='" . $id ."'") or (mysqli_error($con));
 		$d = mysqli_fetch_array($transfer);
 		
 		#collects record in the Login Table at the corresponding LoginID collected
-		$transfer2 = mysqli_query($con, "SELECT * FROM Login WHERE LoginID='".$d['LoginID']."'");
+		$transfer2 = mysqli_query($con, "SELECT * FROM login WHERE LoginID='".$d['LoginID']."'");
 		$d2 = mysqli_fetch_array($transfer2);
 
 		#assigns data from collected record
@@ -158,13 +183,13 @@
 		$Password = $d2["Password"];
 
 		#backups record by inserting data into DeletedConsumer Table
-        mysqli_query($con, "INSERT INTO DeletedConsumer(ConsumerID, Firstname, Surname , Email , PhoneNumber , Username , Password, LoginID, Address) 
+        mysqli_query($con, "INSERT INTO deletedconsumer(ConsumerID, Firstname, Surname , Email , PhoneNumber , Username , Password, LoginID, Address) 
 		VALUES ('$id' , '$Firstname', '$Surname' , '$Email' , '$PhoneNumber' , '$Username' , '$Password',$d[LoginID], '$Address')") or die(mysqli_error($con));
         
 		#deletes record in the Consumer Table at the corresponding ConsumerID
-		mysqli_query($con, "DELETE FROM Consumer WHERE ConsumerID='" . $id ."'") or (mysqli_error($con));
+		mysqli_query($con, "DELETE FROM consumer WHERE ConsumerID='" . $id ."'") or (mysqli_error($con));
 		#deletes record in the Login Table at the corresponding LoginID collected
-		mysqli_query($con, "DELETE FROM Login WHERE LoginID='" . $d['LoginID'] ."'") or (mysqli_error($con));
+		mysqli_query($con, "DELETE FROM login WHERE LoginID='" . $d['LoginID'] ."'") or (mysqli_error($con));
         $message = "Data deleted";
     }
 ?>
@@ -188,14 +213,16 @@ include 'Enitity/menu.php';
 if ($_SESSION["Type"] === "Photographer"){ 
 	if (isset($_POST['_search'])) {
 		#collects all consumers relating to search
-        $query = mysqli_query($con, "SELECT * FROM Consumer INNER JOIN Login ON Consumer.LoginID = Login.LoginID WHERE (ConsumerID='".$_POST['search']."' or 
+        $query = mysqli_query($con, "SELECT * FROM consumer INNER JOIN Login ON consumer.LoginID = login.LoginID WHERE (ConsumerID='".$_POST['search']."' or 
 		Firstname LIKE'%".$_POST['search']."%' or Surname LIKE'%".$_POST['search']."%' or PhoneNumber LIKE'%".$_POST['search']."%' 
 		or Address LIKE'%".$_POST['search']."%' or Email LIKE'%".$_POST['search']."%' or Username LIKE '%".$_POST['search']."%')")
-		or die(mysqli_error($con));}
+		or die(mysqli_error($con));
+	}
 else{
 	#collects all consumers
-    $query = mysqli_query($con, "SELECT * FROM Consumer INNER JOIN Login ON Consumer.LoginID = Login.LoginID")
-   or die(mysqli_error($con));}
+    $query = mysqli_query($con, "SELECT * FROM consumer INNER JOIN Login ON consumer.LoginID = login.LoginID")
+   or die(mysqli_error($con));
+}
    #creates a search bar
    ?>
 
@@ -254,13 +281,12 @@ else{
 <?php }
 
 #redirect users that aren't logged in to the referal page
-if($_SESSION["Username"]){}
-else
+if(!isset($_SESSION["Username"]))
 { header("Location:Refer.php");}
 
 
 #shows form only if edit is selected or only one option exists
-if (($_SESSION["Type"] === "Consumer") or $update == true){ ?>
+if (($_SESSION["Type"] === "Consumer") || $update){ ?>
     
 	<?php #creates the form?>
 	<form name="frmsign" method="post" action="" align="center">

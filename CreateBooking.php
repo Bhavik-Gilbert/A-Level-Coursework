@@ -2,7 +2,7 @@
 session_start();
 $message="";
 #checks if form has been submitted
-if(count($_POST)>0) {
+if(!empty($_POST)) {
   #connects page to database
   include 'Enitity/connect.php';
 
@@ -16,31 +16,36 @@ if(count($_POST)>0) {
   $ID = $_SESSION['ID'];
 
   #stops data repetition in the database/double booking
-  $Check2 = mysqli_query($con, "SELECT * FROM Booking WHERE Date='".$Date."' and StartTime='".$StartTime."' and ShootLocation='".$Address."'") or die(mysqli_error($con));
+  $Check2 = mysqli_query($con, "SELECT * FROM booking WHERE Date='".$Date."' and StartTime='".$StartTime."' and ShootLocation='".$Address."'") or die(mysqli_error($con));
   $BookingCheck  = mysqli_fetch_array($Check2);
 
-  $Check1 = mysqli_query($con, "SELECT * FROM Booking WHERE Date='".$Date."'") or die(mysqli_error($con));
+  $Check1 = mysqli_query($con, "SELECT * FROM booking WHERE Date='".$Date."'") or die(mysqli_error($con));
   $TimeCheck  = mysqli_fetch_array($Check1);
 	
-  #validates all values in the form
-  if (($ShootType == "") or ($PackageType == "") or ($Date == "") or ($Address == "" ) or ($StartTime == "") or ($Length == "")){
-	  $message = "Please fill in all of the fields";}
+  #validate all values in the form
+  if (empty($ShootType) || empty($PackageType) || $empty($Date) || empty($Address) || empty($StartTime) || empty($Length)){
+	  $message = "Please fill in all of the fields";
+  }
   else if(is_array($BookingCheck)){
-	  	$message= "This booking is already registered";}
+	  	$message= "This booking is already registered";
+    }
   else if(is_array($TimeCheck)){
-	  	$message= "This time slot is already taken";}
+	  	$message= "This time slot is already taken";
+    }
   else if (!is_numeric($Length))
-    {$message = "Invalid Value for Shoot Length Field";}
-  else if ($Length>12 or $Length<0)
-	  {$message = "Length is too long";}
+    {$message = "Invalid Value for Shoot Length Field";
+    }
+  else if ($Length>12 || $Length<0)
+	  {$message = "Length is too long";
+    }
 	
   else{
     #gets price for selected shoottype in the ShootType table
-	  $select1 = mysqli_query($con, "SELECT * FROM ShootType WHERE ShootTypeID='".$ShootType."'")	or die(mysqli_error($con));
+	  $select1 = mysqli_query($con, "SELECT * FROM shoottype WHERE ShootTypeID='".$ShootType."'")	or die(mysqli_error($con));
 	  $Shoot = mysqli_fetch_array($select1);
 
     #gets price for selected package in the package table
-    $select2 = mysqli_query($con, "SELECT * FROM Package WHERE PackageID='".$PackageType."'") or die(mysqli_error($con));
+    $select2 = mysqli_query($con, "SELECT * FROM package WHERE PackageID='".$PackageType."'") or die(mysqli_error($con));
     $Package = mysqli_fetch_array($select2);
   
     #calculates estimated price
@@ -60,21 +65,24 @@ if(count($_POST)>0) {
 	
     if ($_SESSION["Type"] === "Consumer") {
       #saves record to booking using SessionID as ConsumerID
-      $sql = mysqli_query($con, "INSERT INTO Booking (ConsumerID, PhotographerID , ShootTypeID , PackageID , Date , ShootLocation , StartTime, Length , Price , Status, Paid) 
-      VALUES ('$ID','1','$ShootType','$PackageType','$Date','$Address','$StartTime','$Length','$Price','Unconfirmed', 'no')") or die (mysqli_error($con));}
+      $sql = mysqli_query($con, "INSERT INTO booking (ConsumerID, PhotographerID , ShootTypeID , PackageID , Date , ShootLocation , StartTime, Length , Price , Status, Paid) 
+      VALUES ('$ID','1','$ShootType','$PackageType','$Date','$Address','$StartTime','$Length','$Price','Unconfirmed', 'no')") or die (mysqli_error($con));
+      }
 
     if ($_SESSION["Type"] === "Photographer"){
       #saves record to booking using specified photographer record in consumer table as ConsumerID
-      $sql = mysqli_query($con, "INSERT INTO Booking (ConsumerID, PhotographerID , ShootTypeID , PackageID , Date , ShootLocation , StartTime, Length , Price , Status, Paid) 
-      VALUES ('38','1','$ShootType','$PackageType','$Date','$Address','$StartTime','$Length','$Price','Unconfirmed', 'no')") or die (mysqli_error($con));}
+      $sql = mysqli_query($con, "INSERT INTO booking (ConsumerID, PhotographerID , ShootTypeID , PackageID , Date , ShootLocation , StartTime, Length , Price , Status, Paid) 
+      VALUES ('38','1','$ShootType','$PackageType','$Date','$Address','$StartTime','$Length','$Price','Unconfirmed', 'no')") or die (mysqli_error($con));
+      }
 
     $message =  "New record created successfully.";
     #Send user to invoice page
-    header("Location:Invoice.php");}}
+    header("Location:Invoice.php");
+  }
+}
 
 #redirect users that aren't logged in to the referal page
-if($_SESSION["Username"]){}
-else
+if(!isset($_SESSION["Username"]))
 { header("Location:Refer.php");}
 ?>
 

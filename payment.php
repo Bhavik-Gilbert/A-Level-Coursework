@@ -21,7 +21,7 @@
         #gets CardID
         $CardID = $_GET['del'];
         #Delete record from Card at CardID
-        mysqli_query($con, "DELETE FROM Card WHERE CardID='" . $CardID ."'") or (mysqli_error($con));
+        mysqli_query($con, "DELETE FROM card WHERE CardID='" . $CardID ."'") or (mysqli_error($con));
 		$message = "Card deleted";}
     
     #checks if purchase is selected
@@ -32,11 +32,11 @@
         $hold3 = "yes";
         $Order = date("Y/m/d");
         #updates booking at BookingID
-        mysqli_query($con, "INSERT INTO Orders (BookingID, CardID , OrderDate) 
+        mysqli_query($con, "INSERT INTO orders (BookingID, CardID , OrderDate) 
         VALUES ('$Reference','$CardID','$Order')") or die (mysqli_error($con));
-        $sql = mysqli_query($con, "UPDATE Booking SET Paid='".$hold3."' WHERE BookingID='".$Reference."'") or die(mysqli_error($con));
+        $sql = mysqli_query($con, "UPDATE booking SET Paid='".$hold3."' WHERE BookingID='".$Reference."'") or die(mysqli_error($con));
         #selects record from Booking at corresponding BookingID
-        $record = mysqli_query($con, "SELECT * FROM Booking WHERE BookingID='" . $Reference ."'");
+        $record = mysqli_query($con, "SELECT * FROM booking WHERE BookingID='" . $Reference ."'");
         $n = mysqli_fetch_array($record);
         #assigns data collected
         $ShootType = $n['ShootTypeID'];
@@ -59,7 +59,8 @@
         $Reference = "";
         $_SESSION["Reference"] = "";
         #Directs to invoice page
-        header("Location:Invoice.php");} 
+        header("Location:Invoice.php");
+    } 
     
     #checks if Add is selected
     if (isset($_POST['Add'])) {
@@ -78,26 +79,30 @@
             #performs check on the 16 digit card number
             $verified = CardCheck($CardNumber,$Type); 
             #validates form inputs
-            if ($CardNumber == "" or $ExpiryMonth == "" or $ExpiryYear == "" or $CVV == "" or $Owner == "" or $Address == "" or $Type == "") {
+            if (empty($CardNumber) || empty($ExpiryMonth) || empty($ExpiryYear) || empty($CVV) || empty($Owner) || empty($Address) || empty($Type)) {
                 $message = "Please fill in all of the fields";
-            } elseif (is_numeric($Owner)) {
+            } 
+            elseif (is_numeric($Owner)) {
                 $message = "Invalid card owner name";
-            } elseif ($verified == false){
+            } 
+            elseif (!$verified){
                 $message = "Invalid 16 digit card number";
-            } elseif ((!is_numeric($CVV)) or (mb_strlen($CVV)!=3)) {
+            } 
+            elseif ((!is_numeric($CVV)) || (mb_strlen($CVV)!=3)) {
                 $message = "Invalid CVV";
-            } elseif (is_numeric($Owner)) {
-                $message = "Invalid card owner name";}
+            }
              else {
                 #sets ConsumerID
                 if ($_SESSION["Type"] == "Consumer") {
-                    $ID = $_SESSION["ID"];}
+                    $ID = $_SESSION["ID"];
+                }
                 if ($_SESSION["Type"] == "Photographer"){
-                    $ID=38;}
+                    $ID=38;
+                }
                     #Encrypts card value
                     $cardencrypt = openssl_encrypt($CardNumber, "AES-128-CTR", "GeeksforGeeks" , 0, '1234567891011121'); 
                 #Inserts new card into the Card Table                    
-                $sql = mysqli_query($con, "INSERT INTO Card (CardHolder, 16digit , CVV , Expiry , ConsumerID, CardAddress, CardType) 
+                $sql = mysqli_query($con, "INSERT INTO card (CardHolder, 16digit , CVV , Expiry , ConsumerID, CardAddress, CardType) 
                 VALUES ('$Owner','$cardencrypt','$CVV','$Expiry','$ID','$Address','$Type')") or die (mysqli_error($con));
                 $message="Card Added";}}
         else{$message = "Please choose a booking to pay for";}}
@@ -127,25 +132,15 @@
         }
 
         #End check if card type not supported
-        if ($cardType == -1) {   
-            return false; 
-         }
-
         #End check if no card number is entered
-        if (strlen($cardnumber) == 0)  {  
-        return false; 
-        }
-
         #Checks the card is numeric and a valid length
-
-        if (!preg_match("/^[0-9]{13,19}$/",$cardnumber))  {
-            return false; 
-        }
+        if (($cardType == -1) || (strlen($cardnumber) == 0) || (!preg_match("/^[0-9]{13,19}$/",$cardnumber))) {
+            return false;
+            }
 
         #runs mod 10 check for valid card number
         if ($cards[$cardType]['checkdigit']) {
-            $checksum = 0;                                  # running checksum total
-            $mychar = "";                                   # next char to process
+            $checksum = 0;                                    # next char to process
             $j = 1;                                         # takes value of 1 or 2
             #Processing each digit
             for ($i = strlen($cardnumber) - 1; $i >= 0; $i--) {
@@ -156,13 +151,14 @@
                     $checksum = $checksum + 1;
                     $calc = $calc - 10;
                 }
-                #Add the units element to the checksum total
+                # Add the units element to the checksum total
                 $checksum = $checksum + $calc;
                 #Switch the value of j
-                if ($j ==1) {$j = 2;} else {$j = 1;};
+                if ($j ==1) {$j = 2;} 
+                else {$j = 1;}
             } 
             #Report error is mod 10 is not 0
-            if ($checksum % 10 != 0) {;
+            if ($checksum % 10 != 0) {
                 return false; 
             }
         }  
@@ -197,7 +193,7 @@
         #End check in the case of an invalid length
         if (!$LengthValid) {
             return false; 
-        };   
+        }   
         
         #Return true if all checks are cleared
         return true;
@@ -226,23 +222,23 @@ if ($_SESSION["Type"] === "Photographer") {
     #checks if search is selected
     if (isset($_POST['_search'])) {
         #collects from ShootType where record is like search
-        $select1 = mysqli_query($con, "SELECT * FROM ShootType WHERE Type LIKE '%".$_POST['search']."%'")
+        $select1 = mysqli_query($con, "SELECT * FROM shoottype WHERE Type LIKE '%".$_POST['search']."%'")
         or die(mysqli_error($con));
         $Shoot = mysqli_fetch_array($select1);
 
         #collects from Package where record is like search
-        $select2 = mysqli_query($con, "SELECT * FROM Package WHERE Type LIKE '%".$_POST['search']."%'")
+        $select2 = mysqli_query($con, "SELECT * FROM package WHERE Type LIKE '%".$_POST['search']."%'")
         or die(mysqli_error($con));
         $Package = mysqli_fetch_array($select2);
 
         #collects from Booking where record is like search
-        $query = mysqli_query($con, "SELECT * FROM Booking WHERE (Date LIKE'%".$_POST['search']."%' or 
+        $query = mysqli_query($con, "SELECT * FROM booking WHERE (Date LIKE'%".$_POST['search']."%' or 
 		ShootLocation LIKE'%".$_POST['search']."%' or StartTime LIKE'%".$_POST['search']."%' or Price LIKE'%".$_POST['search']."%' 
 		or ShootTypeID='".$Shoot['ShootTypeID']."' or PackageID='".$Package['PackageID']."') AND (Paid='".$hold1."' AND Status='".$hold2."')")
         or die(mysqli_error($con));
     } else {
         #selects all from bookings
-        $query = mysqli_query($con, "SELECT * FROM Booking WHERE Paid='".$hold1."' AND Status='".$hold2."'") or die(mysqli_error($con));
+        $query = mysqli_query($con, "SELECT * FROM booking WHERE Paid='".$hold1."' AND Status='".$hold2."'") or die(mysqli_error($con));
     }
 }
 
@@ -250,29 +246,28 @@ else{
     #checks if search is selected
     if (isset($_POST['_search'])) {
         #collects from ShootType where record is like search
-        $select1 = mysqli_query($con, "SELECT * FROM ShootType WHERE Type LIKE '%".$_POST['search']."%'")
+        $select1 = mysqli_query($con, "SELECT * FROM shoottype WHERE Type LIKE '%".$_POST['search']."%'")
         or die(mysqli_error($con));
         $Shoot = mysqli_fetch_array($select1);
 
         #collects from Package where record is like search
-        $select2 = mysqli_query($con, "SELECT * FROM Package WHERE Type LIKE '%".$_POST['search']."%'")
+        $select2 = mysqli_query($con, "SELECT * FROM package WHERE Type LIKE '%".$_POST['search']."%'")
         or die(mysqli_error($con));
         $Package = mysqli_fetch_array($select2);
 
         #collects from Booking where record is like search at ConsumerID
-        $query = mysqli_query($con, "SELECT * FROM Booking WHERE (Paid='".$hold1."' AND Status='".$hold2."' AND ConsumerID='".$_SESSION['ID']."') and (Date LIKE'%".$_POST['search']."%' or 
+        $query = mysqli_query($con, "SELECT * FROM booking WHERE (Paid='".$hold1."' AND Status='".$hold2."' AND ConsumerID='".$_SESSION['ID']."') and (Date LIKE'%".$_POST['search']."%' or 
 		ShootLocation LIKE'%".$_POST['search']."%' or StartTime LIKE'%".$_POST['search']."%' or Price LIKE'%".$_POST['search']."%'
 		or ShootTypeID='".$Shoot['ShootTypeID']."' or PackageID='".$Package['PackageID']."')")
         or die(mysqli_error($con));
     } else {
         #selects all from bookings at ConsumerID
-        $query = mysqli_query($con, "SELECT * FROM Booking WHERE Paid='".$hold1."' AND Status='".$hold2."' AND ConsumerID='".$_SESSION['ID']."'") or die(mysqli_error($con));
+        $query = mysqli_query($con, "SELECT * FROM booking WHERE Paid='".$hold1."' AND Status='".$hold2."' AND ConsumerID='".$_SESSION['ID']."'") or die(mysqli_error($con));
     }
 } 
 
 #redirect users that aren't logged in to the referal page
-if($_SESSION["Username"]){}
-else
+if(!isset($_SESSION["Username"]))
 { header("Location:Refer.php");}
 #creates a search bar
 ?>
@@ -311,10 +306,10 @@ else
     #insert the records selected from the Booking table into the displayed table
 	while ($row = mysqli_fetch_array($query)) {
         #gets name of the shoottype at ShootTypeID in ShootType Table
-		$collect1 = mysqli_query($con, "SELECT * FROM ShootType WHERE ShootTypeID='".$row["ShootTypeID"]."'") or die(mysqli_error($con));
+		$collect1 = mysqli_query($con, "SELECT * FROM shoottype WHERE ShootTypeID='".$row["ShootTypeID"]."'") or die(mysqli_error($con));
 		$Shootings = mysqli_fetch_array($collect1);
 		#gets name of the package at PackageID in Package Table
-        $collect2 = mysqli_query($con, "SELECT * FROM Package WHERE PackageID='".$row['PackageID']."'") or die(mysqli_error($con));
+        $collect2 = mysqli_query($con, "SELECT * FROM package WHERE PackageID='".$row['PackageID']."'") or die(mysqli_error($con));
 		$Packagings = mysqli_fetch_array($collect2);
         #output data in row array
 		echo
@@ -341,9 +336,9 @@ else
 <?php 
 #selects cards at ConsumerID
     if ($_SESSION["Type"] == "Consumer") {
-        $query2 = mysqli_query($con, "SELECT * FROM Card WHERE ConsumerID='".$_SESSION['ID']."'") or die(mysqli_error($con));
+        $query2 = mysqli_query($con, "SELECT * FROM card WHERE ConsumerID='".$_SESSION['ID']."'") or die(mysqli_error($con));
     }
-    else{$query2 = mysqli_query($con, "SELECT * FROM Card WHERE ConsumerID='38'") or die(mysqli_error($con));}
+    else{$query2 = mysqli_query($con, "SELECT * FROM card WHERE ConsumerID='38'") or die(mysqli_error($con));}
     #display the table 
     ?>
 
