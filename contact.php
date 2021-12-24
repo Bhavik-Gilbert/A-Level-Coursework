@@ -1,40 +1,28 @@
 <?php 
 #checks if something has been submitted
-if(isset($_POST)) {
+if(!empty($_POST)) {
     //initialising variable
     $message = "";
     #validates form
     if ((empty($_POST['Email'])) || (empty($_POST['Comment']))){
-		$message = "Please fill in all of the fields";
+		$message .= "Please fill in all of the fields <br>";
     }
-    else if (!filter_var($_POST['Email'], FILTER_VALIDATE_EMAIL)){
-        $message = "Invalid Value for Email Field";
+    if (!filter_var($_POST['Email'], FILTER_VALIDATE_EMAIL)){
+        $message .= "Invalid Value for Email Field <br>";
     }
-    else{
-        #assigns collected data from the form
-        $Email = $_POST['Email'];
-        $Comment = $_POST['Comment'];
-        #uses mail function to send email
-        $send = (mail("bhaviklob@gmail.com",$Email,$Comment));
-        #checks if email was sent
-        if ($send){
-            $message = "Message sent successfully, we'll get back to you at our earliest convenience";
-        }
-         else {
-             $message = "Message could not be sent, try again later";
-        }
+    if(empty($message)){
+        $email = $_POST['Email'];
+        $message = $_POST['Comment'];
+        include'mail.php';  
     }
 }
 ?> <DOCTYPE html>
 <html>
-<?php
-session_start();
-?>
-
 <head>
 <meta charset="utf-8">
 <title>Contact Page</title>
 <link rel="stylesheet" type = "text/css" href="CSS/Style.css">
+<link rel="stylesheet" type = "text/css" href="CSS/table.css">
 </head>
 
 <body>
@@ -42,22 +30,34 @@ session_start();
 #displays navbar at the top of the page
 include 'Enitity/menu.php';
 ?>
-<h1> Contact</h1>
-<p>If you'd like any more info about my photography, you can get in touch using the form below, via info@londonphotographer.co.uk or on 07986 821020.</p>
+<div align="center">
+    <h1> Contact</h1>
+    <p2>If you'd like any more info about my photography, you can get in touch using the form below.</p2>
+</div>
+
 
 <?php #creates form for users to input their email and message ?>
-<form method="post">
-<div class="message"><?php if ($message!="") {
-        echo $message;
-    } ?>
-<br><br>
-Email:<br> <textarea name="Email" rows="1" cols="32"></textarea>
-<br><br>
-Message:<br> <textarea name="Comment" rows="6" cols="80"></textarea>
-<br>
-<button type="submit" name="Submit" style="display: block; margin-left: 265px;">Submit</button>
+<form method="post" align="center">
+ <?php if(!empty($message)) { ?> <div class="message"> <?php echo $message; ?> </div> <?php } ?>
+
+<div class="input-group">
+<label>Email</label> 
+<input name="Email" rows="1" cols="32"></input>
+</div>
+<div class="input-group">
+<label>Message</label>
+<textarea name="Comment" rows="6" cols="80"></textarea>
+</div>
+
+<button type="submit" class="btn name="Submit">Send</button>
 </form>
-<p>My Studio Address is: 14 Bacon Street London E1 6LF Telephone Numbers: 07986 821020 020 7193 7633</p>
+
+<br><br>
+<div align="center">
+    <p2>p.s. the mailer may not work due to the server not being able to handle the request<br>
+        you can feel free to upload the code from my github to another server if you really want to test this<br>
+        sorry for the inconvenience</p2>
+</div>
 
 <br><br><br>
 </body>

@@ -48,41 +48,42 @@ if(!empty($_POST)) {
 
 		#validates all values in the form
 		if (empty($Firstname) || empty($Surname ) || (empty($Email) && empty($PhoneNumber)) || empty($Username) || empty($Password) || empty($Address)){
-			$message = "Please fill in all of the fields";
+			$message .= "Please fill in all of the fields <br>";
 		}
-		else if($_POST['Password'] !== $_POST['Password1'])
-			{$message= "Your passwords do not match";}
-		else if (is_numeric($Firstname)){
-			$message = "Invalid Value for Firstname Field";
+		if($_POST['Password'] !== $_POST['Password1']){
+			$message .= "Your passwords do not match <br>";
 		}
-		else if (is_numeric($Surname)){
-			$message = "Invalid Value for Surname Field";
+		if (is_numeric($Firstname)){
+			$message .= "Invalid Value for Firstname Field <br>";
 		}
-		else if(is_array($NameCheck)){
-			$message= "This name is already registered in the system";
+		if (is_numeric($Surname)){
+			$message .= "Invalid Value for Surname Field <br>";
 		}
-		else if (!filter_var($Email, FILTER_VALIDATE_EMAIL)){
-			$message = "Invalid Value for Email Field";
+		if(is_array($NameCheck)){
+			$message .= "This name is already registered in the system <br>";
 		}
-		else if(is_array($MailCheck)){
-			$message= "This email is already registered in the system";
+		if (!filter_var($Email, FILTER_VALIDATE_EMAIL)){
+			$message .= "Invalid Value for Email Field <br>";
 		}
-		else if ((!is_numeric($PhoneNumber)) || (strlen($PhoneNumber)<11)){
-			$message = "Invalid Value for PhoneNumber Field. It should be a UK number in 07 or 02 form.";
+		if(is_array($MailCheck)){
+			$message= "This email is already registered in the system <br>";
 		}
-		else if(is_array($PhoneCheck)){
-			$message= "This phone number is already registered in the system";
+		if ((!is_numeric($PhoneNumber)) || (strlen($PhoneNumber)<11)){
+			$message .= "Invalid Value for PhoneNumber Field. It should be a UK number in 07 or 02 form <br>";
 		}
-		else if(is_array($UserCheck)){
-			$message= "This username is taken";
+		if(is_array($PhoneCheck)){
+			$message .= "This phone number is already registered in the system <br>";
 		}
-		else if (strlen($_POST['Password'])<8){
-			$message = "Password is too short, it must be at least 8 characters long";
+		if(is_array($UserCheck)){
+			$message .= "This username is taken <br>";
 		}
-		else if(!$uppercase || !$lowercase || !$number || !$specialChars){
-			$message = "Password must include 1 upper case, 1 lower case, 1 number and 1 special character";
+		if (strlen($_POST['Password'])<8){
+			$message .= "Password is too short, it must be at least 8 characters long <br>";
 		}
-		else{
+		if(!$uppercase || !$lowercase || !$number || !$specialChars){
+			$message .= "Password must include 1 upper case, 1 lower case, 1 number and 1 special character <br>";
+		}
+		if(empty($message)){
 			#adds data to login table in database
 			$sql = mysqli_query($con, "INSERT INTO login (Username, Password, Type) 
 			VALUES ('$Username' , '$Hash', 'Consumer')") or die (mysqli_error($con));
@@ -117,7 +118,7 @@ include 'Enitity/menu.php';
 <?php
 #redirects users who are logged in so they cannot signup again
 if($_SESSION["Username"]) {
-	header("Location:Account.php");
+	header("Location:booking.php");
 }
 else{
 	#creates a form for users to fill in their details with
@@ -125,8 +126,7 @@ else{
 </body>
 <form method="post" action="" align="center">
 <?php #presents error message in the occurrence of an error ?>
-<div class="message"><?php if ($message!="") {echo $message;} ?></div>
-<h3 align="center">Enter Login Details</h3>
+<?php if(!empty($message)) { ?> <div class="message"> <?php echo $message; ?> </div> <?php } ?>
 
 <div class="input-group">
 <label>Firstname</label>
@@ -181,7 +181,7 @@ else{
 #creates a hyperlink to the login page
 ?>
 <div align="center">
-<a href="login.php" title="Login">Login
+<a href="login.php" class="btn" title="Login" style="background:#fff; color:#000">Login</a>
 </div>
 
 <?php

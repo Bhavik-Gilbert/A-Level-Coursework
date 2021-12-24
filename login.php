@@ -3,7 +3,7 @@
 session_start();
 $message="";
 #checks if form is submitted
-if (isset($_POST['Submit'])) {
+if (!empty($_POST)) {
     if ($_POST['captcha'] == $_SESSION['captcha']) {
         #connects to database
         include 'Enitity/connect.php';
@@ -61,15 +61,14 @@ include 'Enitity/menu.php';
 
 <?php
 if($_SESSION["Username"]) {
-    #redirects users to the account page if they are already logged in
-    header("Location:Account.php");
+    #redirects users to the booking page if they are already logged in
+    header("Location:booking.php");
 }else{
     #provides a form for users to fill in their information
 ?>
 <form method="post" action="" align="center">
 <?php #displays an error message ?>
-<div class="message"><?php if($message!="") { echo $message; } ?></div>
-<h3 align="center">Enter Login Details</h3>
+ <?php if(!empty($message)) { ?> <div class="message"> <?php echo $message; ?> </div> <?php } ?>
 
 <div class="input-group">
 <label>Username</label>
@@ -105,7 +104,7 @@ if($_SESSION["Username"]) {
 #creates a hyperlink to the signup page
 ?>
 <div align="center">
-<a href="signup.php" title="Signup">Signup
+<a href="signup.php" class="btn title="Signup style="background:#fff; color:#000">Signup</a>
 </div>
 
 <?php

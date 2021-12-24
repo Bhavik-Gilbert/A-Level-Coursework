@@ -28,24 +28,25 @@ th, td{
 tr:hover {
     background: #30d5c8;
 }
-
-/* general form colour, shape and position */
-form {
-    width: 45%;
-    margin: 30px auto;
-    text-align: left;
-    padding: 10px; 
-	border-radius: 25px;
-	background-color:#009191;
-	border: 3px solid #015c63; 
-}
-
 /* search bar positioning */
 form1 {
     width: 45%;
     margin: 30px auto;
     text-align: left;
     padding: 10px;  
+}
+
+
+/* general form colour, shape and position */
+form {
+    width: 45%;
+    margin: 30px auto;
+    text-align: center;
+    padding: 10px; 
+	border-radius: 25px;
+	background-color: rgba(255, 255, 255, 0.877);
+    
+	border: 4px double #015c63; 
 }
 
 /* general input group outer margin */
@@ -57,6 +58,7 @@ form1 {
     display: block;
     text-align: left;
     margin: 3px;
+    text-align: center;
 }
 
 /* general input group size and colour */
@@ -66,10 +68,12 @@ form1 {
     padding: 5px 10px;
     font-size: 16px;
     border-radius: 2px;
-    border: 3px solid #0CC;
+    border: none;
+    border-bottom: 3px solid #0CC;
 }
 
-/* general burron features */
+
+/* general button features */
 .btn {
     padding: 10px;
     font-size: 15px;

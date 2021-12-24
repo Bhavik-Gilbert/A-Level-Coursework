@@ -76,7 +76,7 @@ include 'Enitity/menu.php';
 </div>
 
 <br><br>
-<h4>We offer custom bookings as a mixture between these, after booking email us with you booking information to have it sorted.</h4>
+<p2>We offer custom bookings as a mixture between these, after booking email us with you booking information to have it sorted.</p2>
 
 </div>
 <br><br><br>

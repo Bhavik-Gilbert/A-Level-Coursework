@@ -93,74 +93,54 @@
 		}
 		
 		#validates form inputs
-		if ($_SESSION["Type"] == "Consumer"){
-			if ((empty($Firstname)) || (empty($Surname)) || (empty($Email) && empty($PhoneNumber)) || (empty($Address)) || (empty($OPassword))){
-				$message = "Please fill in all of the fields";
-			}
-			else if (is_numeric($Firstname)){
-				$message = "Invalid Value for Firstname Field";
-			}
-			else if (is_numeric($Surname)){
-				$message = "Invalid Value for Surname Field";
-			}
-			else if (!filter_var($Email, FILTER_VALIDATE_EMAIL)){
-				$message = "Invalid Value for Email Field";
-			}
-			else if ((!is_numeric($PhoneNumber)) || (strlen($_POST['PhoneNumber'])<11)){
-				$message = "Invalid Value for PhoneNumber Field. It should be a UK number in 07 or 02 form.";
-			}
-
-			else if  ($end == "false") {
-				$message = "The old password is incorrect";
-			}
-		else{
-			#validates new password if entered
-			if($Password <>""){
-				if (strlen($_POST['Password'])<8){
-					$message = "Password is too short, it must be at least 8 characters long";
-				}
-				else if(!$uppercase || !$lowercase || !$number || !$specialChars){
-					$message = "Password must include 1 upper case, 1 lower case, 1 number and 1 special character";
-				}
-				else {
-					#updates password in login table at the corresponding LoginID
-              		mysqli_query($con, "UPDATE login SET Password='$Hash1'  WHERE LoginID='" . $row['LoginID'] ."'") or die(mysqli_error($con));
-			}
-		}
-				#updates the record in the Consumer Table at the corresponding ConsumerID
-				mysqli_query($con, "UPDATE consumer SET Firstname='$Firstname', Surname='$Surname', Email='$Email', PhoneNumber='$PhoneNumber', Address='$Address' 
-				WHERE ConsumerID='" . $id ."'") or die (mysqli_error($con));
-				$message = "Details Successfully Updated";
-			}
-		}
+        if ($_SESSION["Type"] == "Consumer" && ((empty($Firstname)) || (empty($Surname)) || (empty($Email) && empty($PhoneNumber)) || (empty($Address)) || (empty($OPassword)))) {
+                $message .= "Please fill in all of the fields <br>";
+        }
+        if ($_SESSION["Type"] == "Photographer" && ((empty($Firstname)) || (empty($Surname)) || (empty($Email) && empty($PhoneNumber)) || (empty($Address)))) {
+             $message .= "Please fill in all of the fields <br>";
+        }
 		
-			#validates form inputs
-		if ($_SESSION["Type"] == "Photographer"){
-			if ((empty($Firstname)) || (empty($Surname)) || (empty($Email) && empty($PhoneNumber)) || (empty($Address))){
-				$message = "Please fill in all of the fields";
+		if (is_numeric($Firstname)){
+			$message .= "Invalid Value for Firstname Field <br>";
+		}
+		if (is_numeric($Surname)){
+			$message .= "Invalid Value for Surname Field <br>";
+		}
+		if (!filter_var($Email, FILTER_VALIDATE_EMAIL)){
+			$message .= "Invalid Value for Email Field <br>";
+		}
+		if ((!is_numeric($PhoneNumber)) || (strlen($_POST['PhoneNumber'])<11)){
+			$message .= "Invalid Value for PhoneNumber Field. It should be a UK number in 07 or 02 form <br>";
+		}
+
+        if ($_SESSION["Type"] == "Consumer" && $end == "false") {
+                $message .= "The old password is incorrect <br>";
+        }
+
+		if(empty($message)){
+			if ($_SESSION["Type"] == "Consumer") {
+				#validates new password if entered
+                if (!empty($Password)) {
+                    if (strlen($_POST['Password'])<8) {
+                        $message .= "Password is too short, it must be at least 8 characters long <br>";
+                    }
+                    if (!$uppercase || !$lowercase || !$number || !$specialChars) {
+                        $message .= "Password must include 1 upper case, 1 lower case, 1 number and 1 special character <br>";
+                    }
+                }
+					if(empty($message)){
+						#updates password in login table at the corresponding LoginID
+						mysqli_query($con, "UPDATE login SET Password='$Hash1'  WHERE LoginID='" . $row['LoginID'] ."'") or die(mysqli_error($con));
+				}
 			}
-			else if (is_numeric($Firstname)){
-				$message = "Invalid Value for Firstname Field";
-			}
-			else if (is_numeric($Surname)){
-				$message = "Invalid Value for Surname Field";
-			}
-			else if (!filter_var($Email, FILTER_VALIDATE_EMAIL)){
-				$message = "Invalid Value for Email Field";
-			}
-			else if ((!is_numeric($PhoneNumber)) || (strlen($_POST['PhoneNumber']<11))){
-				$message = "Invlaid Value for PhoneNumber Field. It should be a UK number in 07 or 02 form.";
-			}
-			else{
-				#updates the record in the Consumer Table at the corresponding ConsumerID
-				mysqli_query($con, "UPDATE consumer SET Firstname='$Firstname', Surname='$Surname', Email='$Email', PhoneNumber='$PhoneNumber', Address='$Address' 
-				WHERE ConsumerID='" . $id ."'") or die (mysqli_error($con));
-				$message = "Details Successfully Updated";
-			}
+			#updates the record in the Consumer Table at the corresponding ConsumerID
+			mysqli_query($con, "UPDATE consumer SET Firstname='$Firstname', Surname='$Surname', Email='$Email', PhoneNumber='$PhoneNumber', Address='$Address' 
+			WHERE ConsumerID='" . $id ."'") or die (mysqli_error($con));
+			$message .= "Details Successfully Updated";	
 		}
 	}
 	
-		#checks if the del class button is selected
+	#checks if the del class button is selected
 	if (isset($_GET['del'])) {
 		#assigns id from the del id
         $id = $_GET['del'];

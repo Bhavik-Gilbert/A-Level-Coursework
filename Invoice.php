@@ -52,7 +52,7 @@ If you would like to make any changes to your booking or have any enquiries feel
 <br><br>
 
 <?php # a button to direct users to the account page ?>
-<a href="Account.php" class="btn" type="submit" name="Account" style="background: #008080;">Account</a>
+<a href="booking.php" class="btn" type="submit" name="Account" style="background: #008080;">Bookings</a>
 </div>
 
 <?php

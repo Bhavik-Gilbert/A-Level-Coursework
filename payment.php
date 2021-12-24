@@ -80,18 +80,18 @@
             $verified = CardCheck($CardNumber,$Type); 
             #validates form inputs
             if (empty($CardNumber) || empty($ExpiryMonth) || empty($ExpiryYear) || empty($CVV) || empty($Owner) || empty($Address) || empty($Type)) {
-                $message = "Please fill in all of the fields";
+                $message .= "Please fill in all of the fields <br>";
             } 
-            elseif (is_numeric($Owner)) {
-                $message = "Invalid card owner name";
+            if (is_numeric($Owner)) {
+                $message .= "Invalid card owner name <br>";
             } 
-            elseif (!$verified){
-                $message = "Invalid 16 digit card number";
+            if (!$verified){
+                $message .= "Invalid 16 digit card number <br>";
             } 
-            elseif ((!is_numeric($CVV)) || (mb_strlen($CVV)!=3)) {
-                $message = "Invalid CVV";
+            if ((!is_numeric($CVV)) || (mb_strlen($CVV)!=3)) {
+                $message .= "Invalid CVV <br>";
             }
-             else {
+            if(empty($message)) {
                 #sets ConsumerID
                 if ($_SESSION["Type"] == "Consumer") {
                     $ID = $_SESSION["ID"];
@@ -99,8 +99,8 @@
                 if ($_SESSION["Type"] == "Photographer"){
                     $ID=38;
                 }
-                    #Encrypts card value
-                    $cardencrypt = openssl_encrypt($CardNumber, "AES-128-CTR", "GeeksforGeeks" , 0, '1234567891011121'); 
+                #Encrypts card value
+                $cardencrypt = openssl_encrypt($CardNumber, "AES-128-CTR", "GeeksforGeeks" , 0, '1234567891011121'); 
                 #Inserts new card into the Card Table                    
                 $sql = mysqli_query($con, "INSERT INTO card (CardHolder, 16digit , CVV , Expiry , ConsumerID, CardAddress, CardType) 
                 VALUES ('$Owner','$cardencrypt','$CVV','$Expiry','$ID','$Address','$Type')") or die (mysqli_error($con));

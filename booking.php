@@ -140,17 +140,6 @@ if ($_SESSION["Type"] === "Consumer") {
 	<?php }?>
 </table>
 
-<div class="container" align="center">
-<?php
-#creates buttons to link to other pages
-if ($_SESSION["Type"] == "Photographer"){ ?>
-<a href="EditBooking.php" class="btn" type="submit" name="EditBooking" style="background: #2f9651; border: 1px solid #21703b;">Edit Booking</a>
-<a href="report.php" class="btn" type="submit" name="booking" style="background: #26184a;">Generate Report</a>
-<?php }?>
-<a href="CreateBooking.php" class="btn" type="submit" name="CreateBooking" style="background: #531a88; border: 1px solid #330e54;">Create New Booking</a>
-<a href="payment.php" class="btn" type="submit" name="Payment" style="background: #1c4966;  border: 1px solid #102a3b;">Pay for Booking</a>
-</div>
-
 <br><br><br>
 </body>
 </html>

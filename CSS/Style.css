@@ -1,16 +1,41 @@
 /*page background design*/
-body {background: radial-gradient(circle, #00bd91, #009c9c);}
-body::-webkit-scrollbar {
-  display: none; /* for Chrome, Safari, and Opera */
+body {
+  background-image: url(../images/background.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #00bd91;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 80px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #009c9c;
+}
+
 /*site text colours*/
-h1 {color: #000;}
-h2 {color: #000;}
+h1 {color: #fff; text-decoration: underline;}
+h2 {color: #fff;}
 h3 {color: #000;}
 h4 {color: #222;font-size: 18px;}
 h5 {color: #222;}
 h6 {color: #222;}
 p1 {color: #222;font-size: 20px;}
+p2{ color: #fff;}
 
 /*picture group containers*/
 .basic-container{display: inline-block; overflow:auto;}

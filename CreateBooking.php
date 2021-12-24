@@ -23,23 +23,23 @@ if(!empty($_POST)) {
   $TimeCheck  = mysqli_fetch_array($Check1);
 	
   #validate all values in the form
-  if (empty($ShootType) || empty($PackageType) || $empty($Date) || empty($Address) || empty($StartTime) || empty($Length)){
-	  $message = "Please fill in all of the fields";
+  if (empty($ShootType) || empty($PackageType) || empty($Date) || empty($Address) || empty($StartTime) || empty($Length)){
+	  $message .= "Please fill in all of the fields <br>";
   }
-  else if(is_array($BookingCheck)){
-	  	$message= "This booking is already registered";
+  if(is_array($BookingCheck)){
+	  	$message .= "This booking is already registered <br>";
     }
-  else if(is_array($TimeCheck)){
-	  	$message= "This time slot is already taken";
+  if(is_array($TimeCheck)){
+	  	$message .= "This time slot is already taken <br>";
     }
-  else if (!is_numeric($Length))
-    {$message = "Invalid Value for Shoot Length Field";
+  if (!is_numeric($Length))
+    {$message .= "Invalid Value for Shoot Length Field <br>";
     }
-  else if ($Length>12 || $Length<0)
-	  {$message = "Length is too long";
+  if ($Length>12 || $Length<0)
+	  {$message .= "Length is too long <br>";
     }
 	
-  else{
+  if(empty($message)){
     #gets price for selected shoottype in the ShootType table
 	  $select1 = mysqli_query($con, "SELECT * FROM shoottype WHERE ShootTypeID='".$ShootType."'")	or die(mysqli_error($con));
 	  $Shoot = mysqli_fetch_array($select1);
@@ -98,11 +98,12 @@ if(!isset($_SESSION["Username"]))
 #adds the navbar to the page
 include 'Enitity/menu.php';
 ?>
-</body>
+
 <h1 style="text-align:center">New Booking</h1>
 <?php #creates the form and displays error message?>
 <form name="frmsign" method="post" action="" align="center">
-<div class="message"><?php if($message!="") { echo $message; } ?></div>
+
+<?php if(!empty($message)) { ?> <div class="message"> <?php echo $message; ?> </div> <?php } ?>
 
 <div class="input-group">
 <label>Shoot Type</label>
@@ -157,5 +158,7 @@ include 'Enitity/menu.php';
 </form>
 
 <br><br><br>
+
+</body>
 </html>
 </DOCTYPE>

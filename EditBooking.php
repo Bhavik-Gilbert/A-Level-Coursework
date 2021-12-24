@@ -64,12 +64,12 @@
 		
 		#validates inputted values
 		if ((empty($ShootType)) || (empty($Date)) || (empty($Address)) || (empty($StartTime)) || (empty($Length)) || (empty($Price)) || (empty($Status)) || (empty($PackageType))){
-		$message = "Please fill in all of the fields";
+		$message .= "Please fill in all of the fields <br>";
 	}
-		else if (!is_numeric($Length))
-		{$message = "Invalid Value for Shoot Length Field";
+		if (!is_numeric($Length))
+		{$message .= "Invalid Value for Shoot Length Field <br>";
 		}
-		else{
+		if(empty($message)){
 		#updates record in booking table at the edit id/BookingID selected
 		mysqli_query($con, "UPDATE booking SET ShootTypeID='$ShootType', PackageID='$PackageType', Date='$Date', ShootLocation='$Address', StartTime='$StartTime', Length='$Length', 
 		Price='$Price',Status='$Status',Paid='$Paid' WHERE BookingID='".$id."'") or die (mysqli_error($con));
@@ -123,7 +123,7 @@
 
 	#redirect users that are consumers to the account page
 	if($_SESSION["Type"] == "Consumer")
-		{header("Location:Account.php");}
+		{header("Location:booking.php");}
 	
 ?>
 
@@ -157,7 +157,7 @@ include 'Enitity/menu.php';
 }
 else{
 	#collects all bookings
-	$query = mysqli_query($con, "SELECT * FROM Booking")
+	$query = mysqli_query($con, "SELECT * FROM booking")
    or die (mysqli_error($con));
 }
 #creates a search bar
@@ -235,7 +235,7 @@ if ($update){
 ?>
 	<form method="post" action="EditBooking.php" align="center">
 	<?php #displays message?>
-	<div class="message"><?php if($message!="") { echo $message; } ?></div>
+	<?php if(!empty($message)) { ?> <div class="message"> <?php echo $message; ?> </div> <?php } ?>
 		<div class="input-group">
 			<label>Shoot Type</label>
  			<select name="ShootType">

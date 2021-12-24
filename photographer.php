@@ -85,37 +85,37 @@
 		
 		#validates form inputs
 		if (empty($Firstname) || empty($Surname) || (empty($Email) && empty($PhoneNumber)) || empty($OPassword)){
-			$message = "Please fill in all of the fields";
+			$message .= "Please fill in all of the fields <br>";
 		}
-		else if (is_numeric($Firstname)){
-			$message = "Invalid Value for Firstname Field";
+		if (is_numeric($Firstname)){
+			$message .= "Invalid Value for Firstname Field <br>";
 		}
-		else if (is_numeric($Surname)){
-			$message = "Invalid Value for Surname Field";
+		if (is_numeric($Surname)){
+			$message .= "Invalid Value for Surname Field <br>";
 		}
-		else if (!filter_var($Email, FILTER_VALIDATE_EMAIL)){
-			$message = "Invalid Value for Email Field";
+		if (!filter_var($Email, FILTER_VALIDATE_EMAIL)){
+			$message .= "Invalid Value for Email Field <br>";
 		}
-		else if ((!is_numeric($PhoneNumber)) || (strlen($_POST['PhoneNumber'])<11)){
-			$message = "Invalid Value for PhoneNumber Field. It should be a UK number in 07 or 02 form.";
+		if ((!is_numeric($PhoneNumber)) || (strlen($_POST['PhoneNumber'])<11)){
+			$message .= "Invalid Value for PhoneNumber Field. It should be a UK number in 07 or 02 form <br>";
 		}
-		else if  ($end == "false") {
-			$message = "The old password is incorrect";
+		if  ($end == "false") {
+			$message .= "The old password is incorrect <br>";
 		}
-		else{
+		if(empty($message)){
 			#validates new password if entered
 			if($Password <>""){
 				if (strlen($_POST['Password'])<8){
-					$message = "Password is too short, it must be at least 8 characters long";
+					$message .= "Password is too short, it must be at least 8 characters long <br>";
 				}
 				else if(!$uppercase || !$lowercase || !$number || !$specialChars){
-					$message = "Password must include 1 upper case, 1 lower case, 1 number and 1 special character";
+					$message .= "Password must include 1 upper case, 1 lower case, 1 number and 1 special character <br>";
 				}
 			else {
 				#updates password in login table at the corresponding LoginID
                 mysqli_query($con, "UPDATE login SET Password='$Hash1'  WHERE LoginID='" . $row['LoginID'] ."'") or die(mysqli_error($con));
+				}
 			}
-		}
 			#updates the record in the Photographer Table at the corresponding PhotographerID
 			mysqli_query($con, "UPDATE photographer SET Firstname='$Firstname', Surname='$Surname', Email='$Email', PhoneNumber='$PhoneNumber' WHERE PhotographerID='" . $id ."'") 
 			or die (mysqli_error($con));
