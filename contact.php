@@ -13,7 +13,7 @@ if(!empty($_POST)) {
     if(empty($message)){
         $email = $_POST['Email'];
         $message = $_POST['Comment'];
-        include'mail.php';  
+        include'../Email/mail.php';  
     }
 }
 ?> <DOCTYPE html>
@@ -55,7 +55,6 @@ include 'Enitity/menu.php';
 <br><br>
 <div align="center">
     <p2>p.s. the mailer may not work due to the server not being able to handle the request<br>
-        you can feel free to upload the code from my github to another server if you really want to test this<br>
         sorry for the inconvenience</p2>
 </div>
 
