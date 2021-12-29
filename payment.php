@@ -6,7 +6,7 @@
     $id = 0;
     $Reference = "";
     $message ="";
-    $update = "false";
+    $update = false;
         
     #checks if pay is selected
     if(isset($_GET['pay'])){ 
@@ -14,7 +14,13 @@
         $Reference = $_GET['pay'];
         $_SESSION["Reference"] = $Reference;
         #sets payment button
-        $update="true";}
+        $update=true;
+    }
+
+    if(isset($_GET['add'])){ 
+        $update = false;
+        header("location:payment.php");
+    }
     
     #checks if del is selected
     if(isset($_GET['del'])){ 
@@ -22,7 +28,8 @@
         $CardID = $_GET['del'];
         #Delete record from Card at CardID
         mysqli_query($con, "DELETE FROM card WHERE CardID='" . $CardID ."'") or (mysqli_error($con));
-		$message = "Card deleted";}
+		$message = "Card deleted";
+    }
     
     #checks if purchase is selected
     if(isset($_GET['purchase'])){
@@ -324,11 +331,18 @@ if(!isset($_SESSION["Username"]))
         <td>{$row['Status']}</td>
         <td>{$row['Paid']}</td>
         <td>{$row['Price']}</td>";
-        #adds a pay button to edit bookings
-            ?>
-        <td>
+        
+        if($update){ ?>
+            <td>
+				<a href="payment.php?add=<?php echo $row['BookingID']; ?>" class="edit_btn">Add Card</a>
+			</td>
+            
+        <?php }
+        else { ?>
+            <td>
 				<a href="payment.php?pay=<?php echo $row['BookingID']; ?>" class="edit_btn">Pay</a>
 			</td>
+        <?php } ?>
 		</tr>
 	<?php }?>
 </table>
@@ -366,16 +380,12 @@ while ($row2 = mysqli_fetch_array($query2)) {
     <td>{$row2['CVV']}</td>
     <td>{$row2['Expiry']}</td>
     <td>{$row2['CardType']}</td>";
-    if ($update == "true") {
-        #adds a payment button to edit bookings
+    if ($update) {
         ?>
          <td>
-            <a href="payment.php?purchase=<?php echo $row2['CardID']; ?>" class="edit_btn">Purchase</a>
+            <a href="payment.php?purchase=<?php echo $row2['CardID']; ?>" class="edit_btn">Use Card</a>
         </td>
-    <?php
-    }
-    #adds a delete button to delete bookings
-    ?>
+    <?php } ?>
         <td>
             <a href="payment.php?del=<?php echo $row2['CardID']; ?>" class="del_btn">Delete</a>
         </td>
@@ -384,19 +394,12 @@ while ($row2 = mysqli_fetch_array($query2)) {
 </table>
 
 <?php
-#shows form only if edit is selected
-if ($update == "true"){ 
-    #creates the form ?>
+if($update){ ?>
+        <h2 align="center">Selected Booking Reference Number :  <?php echo $Reference; ?></h2>
+<?php }
+else{ ?>
     <form name="frmsign" method="post" action="" align="center">
-    <?php #displays message?>
-    <div class="message"><?php if($message!="") { echo $message; } ?></div>
-
-    <div>
-        <label>Reference Number</label>
-        <br>
-        <?php #prefills field with collected BookingID ?>
-        <?php echo $Reference; ?>
-    </div>
+    <?php if(!empty($message)) { ?> <div class="message"> <?php echo $message; ?> </div> <?php } ?>
 
     <div class="input-group">
         <label>Card Owner</label>
@@ -432,18 +435,9 @@ if ($update == "true"){
         </select>
         <select name="Year">
         <option value="">Select...</option>
-        <option value="2020">2020</option>
-        <option value="2021">2021</option>
-        <option value="2022">2022</option>
-        <option value="2023">2023</option>
-        <option value="2024">2024</option>
-        <option value="2025">2025</option>
-        <option value="2026">2026</option>
-        <option value="27">2027</option>
-        <option value="28">2028</option>
-        <option value="29">2029</option>
-        <option value="30">2030</option>
-        <option value="31">2031</option>
+        <?php for($i=date("Y");$i<date("Y")+10;$i++) {?>
+            <option value="<?php echo $i;?>"><?php echo $i;?></option>
+        <?php } ?>
         </select>
     </div>
 

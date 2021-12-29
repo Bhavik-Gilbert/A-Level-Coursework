@@ -3,6 +3,8 @@
 session_start();
 include 'Enitity/connect.php';
 $message="";
+$review = false;
+$viewReview = false;
 
 #checks if the del class button (cancel) is selected
 if (isset($_GET['del'])) {
@@ -11,7 +13,69 @@ if (isset($_GET['del'])) {
 		#change booking status to cancelled in booking table
 		mysqli_query($con, "UPDATE booking SET Status='$state' WHERE BookingID='".$id."'") or die (mysqli_error($con));
 		$message = "Booking Cancelled"; 
+}
+
+if (isset($_GET['pay'])) {
+	header("Location:payment.php");
+}
+
+if (isset($_GET['see'])) {
+	$booking = $_GET['see'];
+	$selection = mysqli_query($con, "SELECT Rating,Review FROM booking WHERE BookingID='".$booking."'") or die(mysqli_error($con));
+  	$check  = mysqli_fetch_array($selection);
+	$viewReview = true;
+}
+
+if (isset($_GET['pay'])) {
+	header("Location:payment.php");
+}
+
+if (isset($_GET['review'])) {
+	$booking = $_GET['review'];
+	$selection = mysqli_query($con, "SELECT * FROM booking WHERE BookingID='".$booking."'") or die(mysqli_error($con));
+  	$check  = mysqli_fetch_array($selection);
+	
+
+	if($check['Rating'] != "0" && !empty($check['Rating']))
+	{
+		$message .= "This booking has already been reviewed <br>";
 	}
+	else
+	{
+		$review = true;
+	}	
+}
+
+if(!empty($_POST)) {
+	//initialising variable
+    $message = "";
+	$review = $_POST['review'];
+	$booking = $_POST['booking'];
+	$rating = $_POST['rating'];
+
+	$selection = mysqli_query($con, "SELECT * FROM booking WHERE BookingID='".$booking."'") or die(mysqli_error($con));
+  	$check  = mysqli_fetch_array($selection);
+	
+	if(empty($booking) || empty($rating)){
+		$message .= "Please fill in all of the fields <br>";
+	}
+	if($check['Paid'] == "no"){
+		$message .= "You can't review a booking that hasn't been paid for <br>";
+	}
+	if($_SESSION['ID'] != $check['ConsumerID']){
+		$message .= "You can't review another persons booking <br>";
+	}
+	if(strlen($review)>5000)
+	{
+		$message .= "A review can have a maximum of up to 5000 characters <br>";
+	}
+	if(empty($message))
+	{
+		$result = serialize($review);
+		mysqli_query($con, "UPDATE booking SET Rating='$rating', Review='$result' WHERE BookingID='".$booking."'") or die (mysqli_error($con));
+		header("location:booking.php");
+	}
+}
 		
 		
 #redirect users that aren't logged in to the referal page
@@ -24,6 +88,7 @@ if(!isset($_SESSION["Username"]))
 <title>Booking Page</title>
 <link rel="stylesheet" type = "text/css" href="CSS/Style.css">
 <link rel="stylesheet" type = "text/css" href="CSS/table.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -90,8 +155,7 @@ if ($_SESSION["Type"] === "Consumer") {
 </div>
 </form>
 
-<?php #displays message?>
-<div class="message"><?php if($message!="") { echo $message; } ?></div>
+<?php if(!empty($message)) { ?> <div class="message"> <?php echo $message; ?> </div> <?php } ?>
 
 <?php #display the table?>
 <table>
@@ -131,14 +195,84 @@ if ($_SESSION["Type"] === "Consumer") {
 		   <td>{$row['Status']}</td>
 		   <td>{$row['Paid']}</td>
    			";
-			#adds a cancel button to cancel bookings
-			?>
-            <td>
-				<a href="booking.php?del=<?php echo $row['BookingID']; ?>" class="del_btn">Cancel</a>
-			</td>
+            if ($row['Status'] != "Cancelled") {
+                if ($_SESSION["Type"] == "Consumer" && $row['Paid']=="yes" && $row['Rating'] != 0) {
+                    ?>
+				<td>
+					<a href="booking.php?see=<?php echo $row['BookingID']; ?>" class="edit_btn"  style="background:#8e35b8">See Review</a>
+				</td>
+				<?php
+                } elseif ($_SESSION["Type"] == "Consumer" && $row['Paid']=="yes") {
+                    ?>
+				<td>
+					<a href="booking.php?review=<?php echo $row['BookingID']; ?>" class="edit_btn"  style="background:#7542f5">Review</a>
+				</td>
+				<?php
+                } else { ?>
+				<td>
+					<a href="booking.php?pay=<?php echo $row['BookingID']; ?>" class="edit_btn" style="background:#4287f5">Pay</a>
+				</td>
+				<?php } ?>
+				<td>
+					<a href="booking.php?del=<?php echo $row['BookingID']; ?>" class="del_btn">Cancel</a>
+				</td>
+			<?php } ?>
 		</tr>
 	<?php }?>
 </table>
+
+<?php if($review){ ?>
+	<h2 align="center">Review</h2>
+	
+    <form method="post" align="center">
+
+    <div class="input-group">
+    <label>Booking Reference</label> 
+    <input name="booking" value="<?php echo $booking;?>"></input>
+    </div>
+	<br>
+
+	<div class="input-group">
+    <label>Rating</label> 
+    <span class="star-rating">
+	<input type="radio" name="rating" value="1"><i></i>
+	<input type="radio" name="rating" value="2"><i></i>
+	<input type="radio" name="rating" value="3"><i></i>
+	<input type="radio" name="rating" value="4"><i></i>
+	<input type="radio" name="rating" value="5"><i></i>
+	</span>
+	</div>
+    <br><br>
+
+    <div class="input-group">
+    <label>Review</label>
+    <textarea name="review"></textarea>
+    </div>
+
+    <button type="submit" class="btn name="Submit">Send</button>
+    </form>
+<?php } 
+
+elseif($viewReview) { ?>
+<div align="center">
+	<div class="review" align="center">
+	<h2>Rating</h2><br>
+	<?php for($i=0; $i<$check['Rating']; $i++){ ?> 
+    <span class="fa fa-star checked"></span>
+	<?php }
+	for($i=0; $i<5-$check['Rating']; $i++){ ?> 
+    <span class="fa fa-star"></span>
+	<?php } ?>
+	<br><br>
+	<?php if(!empty(unserialize($check['Review']))){ ?>
+	<h2>Review</h2><br>
+	<?php echo '"'.unserialize($check['Review']).'"'; }?>
+	</div>
+</div>
+
+
+<?php } ?>
+
 
 <br><br><br>
 </body>

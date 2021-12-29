@@ -17,10 +17,14 @@ include 'Enitity/menu.php';
 
 <?php
 #displays photo slideshows
-include 'Slideshow.php';
+include 'Enitity/Slideshow.php';
 ?>
 
 
+<br><br>
+<div align="center">
+    <p2>Feel free to get in touch if you are interested in our work</p2>
+</div>
 
 <br><br><br>
 </body>

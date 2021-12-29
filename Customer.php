@@ -267,11 +267,9 @@ if(!isset($_SESSION["Username"]))
 
 #shows form only if edit is selected or only one option exists
 if (($_SESSION["Type"] === "Consumer") || $update){ ?>
-    
-	<?php #creates the form?>
+ 
 	<form name="frmsign" method="post" action="" align="center">
-	<?php #displays message?>
-	<div class="message"><?php if($message!="") { echo $message; } ?></div>
+	<?php if(!empty($message)) { ?> <div class="message"> <?php echo $message; ?> </div> <?php } ?>
 
 	<div class="input-group">
 		<label>Firstname</label>

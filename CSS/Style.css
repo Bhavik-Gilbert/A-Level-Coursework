@@ -73,4 +73,29 @@ p2{ color: #fff;}
 			
 .captcha{display: inline-block; overflow:auto; padding: 20px; background: #47b6e6;color: #FFF}
 
-            
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.review{display: table-cell; display: inline-block; overflow:auto; border:5px solid #fff; padding: 20px; 
+      background-color: #000; opacity:0.9; color:#fff; border-style: groove; height: 300px; width: 20%; font-size: 18px;}
+.review:hover{opacity:1;
+    background: linear-gradient(-45deg, #000, #48AAAD, #0492C2, #000);
+    background-size: 400% 400%; background-repeat: no-repeat;
+    background-attachment: fixed; animation: gradient 15s ease infinite;}
+.review::-webkit-scrollbar {
+  display:none;
+}
+
+.checked {
+  color: #D4AF37;
+}            

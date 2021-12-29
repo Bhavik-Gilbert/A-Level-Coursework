@@ -234,7 +234,6 @@ if ($update){
 	#creates the form
 ?>
 	<form method="post" action="EditBooking.php" align="center">
-	<?php #displays message?>
 	<?php if(!empty($message)) { ?> <div class="message"> <?php echo $message; ?> </div> <?php } ?>
 		<div class="input-group">
 			<label>Shoot Type</label>

@@ -17,7 +17,7 @@ session_start();
      <button class="subnavbtn">Home<i class="fa fa-caret-down"></i></button>
        <div class="subnav-content">
         <div id="subnav-trapezoid">
-          <a align="right" href="Home.php">Home</a>
+          <a  href="Home.php">Home</a>
           <a href="contact.php">Contact</a>
         </div>
        </div>

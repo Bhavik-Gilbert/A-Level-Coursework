@@ -33,27 +33,27 @@ include 'Enitity/menu.php';
 <div align="center">
     <h1> Contact</h1>
     <p2>If you'd like any more info about my photography, you can get in touch using the form below.</p2>
-</div>
 
 
-<?php #creates form for users to input their email and message ?>
-<form method="post" align="center">
- <?php if(!empty($message)) { ?> <div class="message"> <?php echo $message; ?> </div> <?php } ?>
 
-<div class="input-group">
-<label>Email</label> 
-<input name="Email" rows="1" cols="32"></input>
-</div>
-<div class="input-group">
-<label>Message</label>
-<textarea name="Comment" rows="6" cols="80"></textarea>
-</div>
+    <?php #creates form for users to input their email and message ?>
+    <form method="post" align="center">
+    <?php if(!empty($message)) { ?> <div class="message"> <?php echo $message; ?> </div> <?php } ?>
 
-<button type="submit" class="btn name="Submit">Send</button>
-</form>
+    <div class="input-group">
+    <label>Email</label> 
+    <input name="Email"></input>
+    </div>
+    <div class="input-group">
+    <label>Message</label>
+    <textarea name="Comment"></textarea>
+    </div>
 
-<br><br>
-<div align="center">
+    <button type="submit" class="btn name="Submit">Send</button>
+    </form>
+
+    <br><br>
+
     <p2>p.s. the mailer may not work due to the server not being able to handle the request<br>
         sorry for the inconvenience</p2>
 </div>
