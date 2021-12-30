@@ -19,6 +19,12 @@ if (isset($_GET['pay'])) {
 	header("Location:payment.php");
 }
 
+if (isset($_GET['receipt'])) {
+	$booking = $_GET['receipt'];
+	include "Enitity/bookingPDF.php";
+	$message = "Receipt Downloaded";
+}
+
 if (isset($_GET['see'])) {
 	$booking = $_GET['see'];
 	$selection = mysqli_query($con, "SELECT Rating,Review FROM booking WHERE BookingID='".$booking."'") or die(mysqli_error($con));
@@ -46,10 +52,10 @@ if (isset($_GET['review'])) {
 	}	
 }
 
-if(!empty($_POST)) {
+if(isset($_POST['Submit'])) {
 	//initialising variable
     $message = "";
-	$review = $_POST['review'];
+	$comment = $_POST['review'];
 	$booking = $_POST['booking'];
 	$rating = $_POST['rating'];
 
@@ -65,13 +71,13 @@ if(!empty($_POST)) {
 	if($_SESSION['ID'] != $check['ConsumerID']){
 		$message .= "You can't review another persons booking <br>";
 	}
-	if(strlen($review)>5000)
+	if(strlen($comment)>5000)
 	{
 		$message .= "A review can have a maximum of up to 5000 characters <br>";
 	}
 	if(empty($message))
 	{
-		$result = serialize($review);
+		$result = serialize($comment);
 		mysqli_query($con, "UPDATE booking SET Rating='$rating', Review='$result' WHERE BookingID='".$booking."'") or die (mysqli_error($con));
 		header("location:booking.php");
 	}
@@ -132,9 +138,9 @@ if ($_SESSION["Type"] === "Consumer") {
 
 		#select bookings related to search for that consumer
 		$query = mysqli_query($con, "SELECT * FROM booking INNER JOIN package ON booking.PackageID = package.PackageID WHERE ConsumerID='". $_SESSION["ID"]."' 
-		and (Date LIKE'%".$_POST['search']."%' or Address LIKE'%".$_POST['search']."%' or StartTime LIKE'%".$_POST['search']."%' or 
+		and (Date LIKE'%".$_POST['search']."%' or ShootLocation LIKE'%".$_POST['search']."%' or StartTime LIKE'%".$_POST['search']."%' or 
 		Price LIKE'%".$_POST['search']."%' or Status LIKE'%".$_POST['search']."%' or ShootTypeID='".$Shoot['ShootTypeID']."' or 
-		PackageID='".$_POST['search']."' or Paid LIKE'%".$_POST['search']."%')")or die(mysqli_error($con));
+		Type LIKE'%".$_POST['search']."%' or Paid LIKE'%".$_POST['search']."%')")or die(mysqli_error($con));
     } else {
 		#select all bookings for that consumer
         $query = mysqli_query($con, "SELECT * FROM booking WHERE ConsumerID='". $_SESSION["ID"]."'")
@@ -195,11 +201,16 @@ if ($_SESSION["Type"] === "Consumer") {
 		   <td>{$row['Status']}</td>
 		   <td>{$row['Paid']}</td>
    			";
+			?>
+			<td>
+				<a href="booking.php?receipt=<?php echo $row['BookingID']; ?>" class="edit_btn"  style="background:#74ab0f">Receipt</a>
+			</td>
+			<?php
             if ($row['Status'] != "Cancelled") {
                 if ($_SESSION["Type"] == "Consumer" && $row['Paid']=="yes" && $row['Rating'] != 0) {
                     ?>
 				<td>
-					<a href="booking.php?see=<?php echo $row['BookingID']; ?>" class="edit_btn"  style="background:#8e35b8">See Review</a>
+					<a href="booking.php?see=<?php echo $row['BookingID']; ?>" class="edit_btn"  style="background:#8e35b8">Reviews</a>
 				</td>
 				<?php
                 } elseif ($_SESSION["Type"] == "Consumer" && $row['Paid']=="yes") {
@@ -249,7 +260,7 @@ if ($_SESSION["Type"] === "Consumer") {
     <textarea name="review"></textarea>
     </div>
 
-    <button type="submit" class="btn name="Submit">Send</button>
+    <button type="submit" class="btn" name="Submit">Send</button>
     </form>
 <?php } 
 

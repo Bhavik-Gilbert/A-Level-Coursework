@@ -13,7 +13,9 @@ if(!empty($_POST)) {
     if(empty($message)){
         $email = $_POST['Email'];
         $message = $_POST['Comment'];
-        include'../Email/mail.php';  
+        $receiver = "bhaviklob@hotmail.com";
+        $subject = "Photography Booking Site";
+        include '../Email/mail.php';  
     }
 }
 ?> <DOCTYPE html>
