@@ -253,7 +253,7 @@ else{
 			</td>
 			<?php #adds a delete button to delete accounts ?>
 			<td>
-				<a href="Customer.php?del=<?php echo $row['ConsumerID']; ?>" class="del_btn">Delete</a>
+				<a onclick="javascript:confirmationDelete($(this));return false;" href="Customer.php?del=<?php echo $row['ConsumerID']; ?>" class="del_btn">Delete</a>
 			</td>
 		</tr>
 	<?php }?>
@@ -339,3 +339,12 @@ if (($_SESSION["Type"] === "Consumer") || $update){ ?>
 <br><br><br>
 </body>
 </html>
+
+<script>
+function confirmationDelete(anchor)
+{
+   var conf = confirm('Are you sure want to delete this cusomter account?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
+</script>

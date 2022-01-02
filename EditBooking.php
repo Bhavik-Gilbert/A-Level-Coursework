@@ -222,7 +222,7 @@ else{
 			</td>
 			<?php #adds a delete button to delete bookings ?>
 			<td>
-				<a href="EditBooking.php?del=<?php echo $row['BookingID']; ?>" class="del_btn">Delete</a>
+				<a onclick="javascript:confirmationDelete($(this));return false;" href="EditBooking.php?del=<?php echo $row['BookingID']; ?>" class="del_btn">Delete</a>
 			</td>
 		</tr>
 	<?php }?>
@@ -322,6 +322,14 @@ if ($update){
 ?>
 </html>
 
+<script>
+function confirmationDelete(anchor)
+{
+   var conf = confirm('Are you sure want to delete this booking?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
+</script>
 
 
 

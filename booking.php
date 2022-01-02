@@ -225,7 +225,7 @@ if ($_SESSION["Type"] === "Consumer") {
 				</td>
 				<?php } ?>
 				<td>
-					<a href="booking.php?del=<?php echo $row['BookingID']; ?>" class="del_btn">Cancel</a>
+					<a onclick="javascript:confirmationDelete($(this));return false;" href="booking.php?del=<?php echo $row['BookingID']; ?>" class="del_btn">Cancel</a>
 				</td>
 			<?php } ?>
 		</tr>
@@ -288,6 +288,15 @@ elseif($viewReview) { ?>
 <br><br><br>
 </body>
 </html>
+
+<script>
+function confirmationDelete(anchor)
+{
+   var conf = confirm('Are you sure want to cancel this booking?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
+</script>
 
 
 

@@ -9,6 +9,7 @@ table{
     margin: 30px auto;
     border-collapse: collapse;
     text-align: left;
+    background: #ebf9ff;
 }
 /* inner table colours */
 tr {

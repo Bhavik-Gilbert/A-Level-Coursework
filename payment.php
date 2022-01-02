@@ -387,7 +387,7 @@ while ($row2 = mysqli_fetch_array($query2)) {
         </td>
     <?php } ?>
         <td>
-            <a href="payment.php?del=<?php echo $row2['CardID']; ?>" class="del_btn">Delete</a>
+            <a onclick="javascript:confirmationDelete($(this));return false;" href="payment.php?del=<?php echo $row2['CardID']; ?>" class="del_btn">Delete</a>
         </td>
     </tr>
 <?php }?>
@@ -466,4 +466,14 @@ else{ ?>
 <br><br><br>
 </body>
 </html>
+
+<script>
+function confirmationDelete(anchor)
+{
+   var conf = confirm('Are you sure want to remove this card?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
+</script>
+
 

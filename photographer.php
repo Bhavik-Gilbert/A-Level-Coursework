@@ -216,7 +216,7 @@ else{
 			</td>
 			<?php #adds a delete button to delete bookings ?>
 			<td>
-				<a href="photographer.php?del=<?php echo $row['PhotographerID']; ?>" class="del_btn">Delete</a>
+				<a onclick="javascript:confirmationDelete($(this));return false;" href="photographer.php?del=<?php echo $row['PhotographerID']; ?>" class="del_btn">Delete</a>
 			</td>
 		</tr>
 	<?php }?>
@@ -290,3 +290,12 @@ if ($update){ ?>
 <br><br><br>
 </body>
 </html>
+
+<script>
+function confirmationDelete(anchor)
+{
+   var conf = confirm('Are you sure want to delete this photographer account?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
+</script>

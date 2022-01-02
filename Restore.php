@@ -167,11 +167,11 @@ else{
 			#adds a restore button to restore bookings
 			?>
 			<td>
-				<a href="Restore.php?res1=<?php echo $row['BookingID']; ?>" class="del_btn" style="background: #096;">Restore</a>
+				<a onclick="javascript:confirmationRestoreBook($(this));return false;" href="Restore.php?res1=<?php echo $row['BookingID']; ?>" class="del_btn" style="background: #096;">Restore</a>
 			</td>
 			<?php #adds a delete button to delete bookings ?>
             <td>
-				<a href="Restore.php?del1=<?php echo $row['BookingID']; ?>" class="del_btn">Delete</a>
+				<a onclick="javascript:confirmationDeleteBook($(this));return false;" href="Restore.php?del1=<?php echo $row['BookingID']; ?>" class="del_btn">Delete</a>
 			</td>
 		</tr>
 	<?php }?>
@@ -235,11 +235,11 @@ else{
 			#adds an restore button to restore accounts
 			?>
 			<td>
-				<a href="Restore.php?res2=<?php echo $row['ConsumerID']; ?>" class="del_btn" style="background: #096;">Restore</a>
+				<a onclick="javascript:confirmationRestoreCust($(this));return false;" href="Restore.php?res2=<?php echo $row['ConsumerID']; ?>" class="del_btn" style="background: #096;">Restore</a>
 			</td>
 			<?php #adds a delete button to delete accounts ?>
             <td>
-				<a href="Restore.php?del2=<?php echo $row['ConsumerID']; ?>" class="del_btn">Delete</a>
+				<a onclick="javascript:confirmationDeleteCust($(this));return false;" href="Restore.php?del2=<?php echo $row['ConsumerID']; ?>" class="del_btn">Delete</a>
 			</td>
 		</tr>
 	<?php }?>
@@ -249,3 +249,33 @@ else{
 <br><br><br>
 </body>
 </html>
+
+<script>
+function confirmationDeleteCust(anchor)
+{
+   var conf = confirm('Are you sure want to permanently delete this customer account?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
+
+function confirmationDeleteBook(anchor)
+{
+   var conf = confirm('Are you sure want to permanently delete this booking?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
+
+function confirmationRestoreCust(anchor)
+{
+   var conf = confirm('Are you sure want to restore this customer account?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
+
+function confirmationRestoreBook(anchor)
+{
+   var conf = confirm('Are you sure want to restore this booking?');
+   if(conf)
+      window.location=anchor.attr("href");
+}
+</script>
