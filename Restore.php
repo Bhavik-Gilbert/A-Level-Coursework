@@ -117,8 +117,7 @@ include 'Enitity/menu.php';
 }
 else{
 	#collects all bookings
-	$query = mysqli_query($con, "SELECT * FROM deletedbooking")
-   or die (mysqli_error($con));
+	$query = mysqli_query($con, "SELECT * FROM deletedbooking") or die (mysqli_error($con));
 }
 #creates a search bar
 ?>
