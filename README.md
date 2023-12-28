@@ -1,5 +1,7 @@
 # Booking-System
 
+### [Live Site](http://bhavik-portfolio.epizy.com/Photography%20Booking%20System/Home.php) - <http://bhavik-portfolio.epizy.com/Photography%20Booking%20System/Home.php>
+
 Photography company booking management website.
 
 Photographers
@@ -17,5 +19,3 @@ Clients
 *   View their bookings
 *   Pay for their bookings
 *   Manage account details
-
-Check out the live site here <http://bhavik-portfolio.epizy.com/Photography%20Booking%20System/Home.php>
