@@ -17,3 +17,5 @@ Clients
 *   View their bookings
 *   Pay for their bookings
 *   Manage account details
+
+Check out the live site here <http://bhavik-portfolio.epizy.com/Photography%20Booking%20System/Home.php>
